@@ -87,8 +87,8 @@
 
 <div id="tabTable" class="tab-panel active">
 <h1 class="sigma-serif">ตาราง Sigma — ผลรวมถึง 1000</h1>
-<p class="subtitle">เซลล์ (แถว r, คอลัมน์ c) = ผลรวมของ f(i) ตั้งแต่ i = r ถึง i = c &nbsp;|&nbsp; ขนาดตารางขยายจนค่ารวมสูงสุดใกล้ 1000 ที่สดโดยไม่เกิน</p>
-<div class="intro-card"><b>ซิกม่า (Σ)</b> คือสัญลักษณ์แทนการบวกเลขต่อเนื่องหลายๆ พจน์ในบรรทัดเดียว แทนที่จะเขียน 1+2+3+...+100 ยาวๆ ก็เขียนสั้นๆ เป็น "ผลรวมของ i ตั้งแต่ i=1 ถึง 100" ได้เลย ตัวเลขข้างบน Σ (คือ n) บอกว่าจะบวกไปถึงไหน ส่วนข้างล่าง (i=k) บอกว่าเริ่มบวกจากตรงไหน</div>
+<p class="subtitle">เซลล์ (แถว r, คอลัมน์ c) = ผลรวมของ f(i) ตั้งแต่ i = r ถึง i = c &nbsp;|&nbsp; ขนาดตารางขยายจนค่ารวมสูงสุดใกล้ 1000 ทีสุดโดยไม่เกิน</p>
+<div class="intro-card"><b>ซิกม่า (Σ)</b> คือสัญลักษณ์แทนการบวกเลขต่อเนื่องหลายๆ พจน์ในบรรทัดเดียว แทนที่จะเขียน 1+2+3+...+100 ยาวๆ ก็เขียนสั้นๆ เป็น "ผลรวมของ i ตั้งแต่ i=1 ถึง 100" ได้เลย ตัวเลขข้างบน Σ (คือ n) บอกว่าจะบวกไปถึงไหน ส่วนขางล่าง (i=k) บอกว่าเริ่มบวกจากตรงไหน</div>
 <div id="formulaGrid" class="formula-grid"></div>
 <div class="formula-line"><span class="lbl">สูตร:</span><span id="formulaCode" class="formula-code sigma-num"></span></div>
 <div class="trivia-card"><div class="trivia-label">สูตรลัด</div><div id="triviaFormula" class="trivia-formula sigma-num"></div></div>
@@ -131,7 +131,7 @@
       <b>เงื่อนไข</b><br/>
       ⚉ ใช้ข้อมูลชุดเดียวกับ Sigma Table (r,c ≤ ขนาดตารางจริง)<br/>
       ⚉ ตัวบน n ≥ ตัวล่าง k<br/>
-      ⚉ ค้นหาครบทั้ง 30 สูตรเมื่อเลือก "ค้นหาทั้งหมด"
+      ⚉ ตรวจครบทั้ง 30 สูตรเสมอ และแสดงผลทั้งสูตรที่พบและไม่พบคำตอบ
     </div>
   </div>
 
@@ -208,7 +208,7 @@ const NO_FORMULA_MSG='ไม่มีสูตรปิด (closed form) — ต
 function getTrivia(key){if(TRIVIA[key])return TRIVIA[key];if(key.startsWith('exp_')){const a=key.split('_')[1];return `Σ${a}ⁱ = (${a}ᵐ − ${a}⁽ⁿ⁺¹⁾) / (1 − ${a})`}return NO_FORMULA_MSG}
 function computeTable(formula){let cum=0,n=0;const pfx=[0];let hitCap=false;while(n<MAX_N){const val=formula.fn(n+1);if(!Number.isFinite(val)||cum+val>MAX_LIMIT)break;cum+=val;n++;pfx.push(cum)}if(n>=MAX_N)hitCap=true;return{N:n,prefix:pfx,capped:hitCap}}
 function renderFormulaGrid(){const container=document.getElementById('formulaGrid');container.innerHTML='';FORMULAS.forEach(f=>{const btn=document.createElement('button');btn.className='formula-btn'+(f.key===selectedKey?' active':'');btn.innerHTML=`<span class="glyph"><span class="glyph-stack"><span class="glyph-n">n</span><span class="glyph-sigma">Σ</span><span class="glyph-k">i=k</span></span><span class="glyph-expr">${f.expr}</span></span>`;btn.addEventListener('click',()=>{selectedKey=f.key;renderAll()});container.appendChild(btn)})}
-function renderAll(){const formula=FORMULAS.find(f=>f.key===selectedKey);const{N,prefix,capped}=computeTable(formula);const maxSum=prefix[N];document.getElementById('formulaCode').textContent=formula.display;document.getElementById('triviaFormula').textContent=getTrivia(formula.key);document.getElementById('metaLine').innerHTML=`i = 1 ถึง ${N} &nbsp;|&nbsp; ผลรวมสูงสุด (มุมขวาบน) = ${maxSum.toLocaleString()}${capped?` &nbsp;·&nbsp; *จำกัดขนาดตารางไวที่ ${MAX_N} แถว/คอลัมน์ เพื่อความลืนไหล`:''}`;const table=document.getElementById('sigmaTable');table.innerHTML='';const thead=document.createElement('thead');const headRow=document.createElement('tr');const corner=document.createElement('th');corner.className='corner';headRow.appendChild(corner);for(let c=1;c<=N;c++){const th=document.createElement('th');th.textContent=c;headRow.appendChild(th)}thead.appendChild(headRow);table.appendChild(thead);const tbody=document.createElement('tbody');for(let r=1;r<=N;r++){const row=document.createElement('tr');const rowHead=document.createElement('th');rowHead.textContent=r;row.appendChild(rowHead);for(let c=1;c<=N;c++){const td=document.createElement('td');if(c<=r){td.textContent='–';td.className='empty'}else{const val=prefix[c]-prefix[r-1];td.textContent=val.toLocaleString();if(c===r+1)td.className='super'}row.appendChild(td)}tbody.appendChild(row)}table.appendChild(tbody);renderFormulaGrid()}
+function renderAll(){const formula=FORMULAS.find(f=>f.key===selectedKey);const{N,prefix,capped}=computeTable(formula);const maxSum=prefix[N];document.getElementById('formulaCode').textContent=formula.display;document.getElementById('triviaFormula').textContent=getTrivia(formula.key);document.getElementById('metaLine').innerHTML=`i = 1 ถึง ${N} &nbsp;|&nbsp; ผลรวมสูงสุด (มุมขวาบน) = ${maxSum.toLocaleString()}${capped?` &nbsp;·&nbsp; *จำกัดขนาดตารางไว้ที่ ${MAX_N} แถว/คอลัมน์ เพื่อความลื่นไหล`:''}`;const table=document.getElementById('sigmaTable');table.innerHTML='';const thead=document.createElement('thead');const headRow=document.createElement('tr');const corner=document.createElement('th');corner.className='corner';headRow.appendChild(corner);for(let c=1;c<=N;c++){const th=document.createElement('th');th.textContent=c;headRow.appendChild(th)}thead.appendChild(headRow);table.appendChild(thead);const tbody=document.createElement('tbody');for(let r=1;r<=N;r++){const row=document.createElement('tr');const rowHead=document.createElement('th');rowHead.textContent=r;row.appendChild(rowHead);for(let c=1;c<=N;c++){const td=document.createElement('td');if(c<=r){td.textContent='–';td.className='empty'}else{const val=prefix[c]-prefix[r-1];td.textContent=val.toLocaleString();if(c===r+1)td.className='super'}row.appendChild(td)}tbody.appendChild(row)}table.appendChild(tbody);renderFormulaGrid()}
 renderAll();
 
 let geoA=2,customA='';
@@ -228,7 +228,8 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 });
 
 // ===== Sigma Finder =====
-const FINDER_RESULT_CAP = 30;
+const FINDER_CARD_CAP = 40;       // จกัดจำนวนการ์ดคำตอบที่แสดง (กันจอรก)
+const MATCHES_PER_FORMULA_CAP = 5; // ต่อ 1 สูตร แสดงคำตอบไม่เกินกี่คู (k,n)
 
 (function populateFinderFormulaSelect(){
   const sel = document.getElementById('finderFormula');
@@ -241,62 +242,91 @@ const FINDER_RESULT_CAP = 30;
 })();
 
 // ดึงข้อมูลจาก computeTable() ตัวเดียวกับที่ใช้เรนเดอร์ Sigma Table โดยตรง
-// เพื่อให้คำตอบของ Finder ตรงกับค่าที่แสดงในตารางเสมอ และสแกนครบทุกสูตร
-// (ไม่มี early-return กลางทาง จึงรับประกันว่าค้นหาครบทั้ง 30 สูตรทุกครั้ง)
+// เพื่อให้คำตอบของ Finder ตรงกับค่าที่แสดงในตารางเสมอ
+// วนครบทุกสูตรในรายการเสมอ (ไม่มี early-return) และคืนผลของ "ทุกสูตร"
+// ไม่ว่าจะพบคำตอบหรือไม่ก็ตาม เพื่อให้ตรวจสอบย้อนหลังได้ว่าครบ 30 สูตรจริง
 function searchSigma(target, formulaKey){
   const list = formulaKey==='all' ? FORMULAS : FORMULAS.filter(f=>f.key===formulaKey);
-  const results = [];
-  for(const formula of list){
+  return list.map(formula=>{
     const { N, prefix } = computeTable(formula);
+    const matches=[];
     for(let k=1;k<=N;k++){
       for(let n=k;n<=N;n++){
         const diff=prefix[n]-prefix[k-1];
-        if(diff===target){results.push({formula,k,n})}
+        if(diff===target){matches.push({k,n})}
         if(diff>target)break;
       }
     }
-  }
-  return results;
+    return { formula, matches };
+  });
 }
 
-let target_display = '';
-
-function renderFinderResults(results, truncated){
+function renderFinderResults(entries, target){
   const container=document.getElementById('finderResults');
   container.innerHTML='';
-  if(results.length===0){
-    container.innerHTML='<div class="finder-empty">ไม่พบคำตอบสำหรับผลรวมนี้ ลองเปลี่ยนค่าหรือเปลี่ยนสูตรดูครับ</div>';
-    return;
+
+  const matchedEntries = entries.filter(e=>e.matches.length>0);
+  const unmatchedEntries = entries.filter(e=>e.matches.length===0);
+  const targetDisplay = target.toLocaleString();
+
+  // สรุปให้เห็นชัดว่าตรวจครบกี่สูตร พบกี่สูตร
+  const summary=document.createElement('div');
+  summary.className='finder-meta sigma-num';
+  summary.style.marginBottom='14px';
+  summary.textContent=`ตรวจสอบแล้ว ${entries.length} สูตร — พบคำตอบใน ${matchedEntries.length} สูตร`;
+  container.appendChild(summary);
+
+  if(matchedEntries.length===0){
+    const empty=document.createElement('div');
+    empty.className='finder-empty';
+    empty.textContent='ไม่พบคำตอบสำหรับผลรวมนี้ในสูตรที่ตรวจสอบ ลองเปลี่ยนค่าหรือเปลี่ยนสูตรดูครบ';
+    container.appendChild(empty);
+  }else{
+    let cardCount=0;
+    let moreHidden=0;
+    matchedEntries.forEach(({formula,matches})=>{
+      matches.slice(0,MATCHES_PER_FORMULA_CAP).forEach(({k,n})=>{
+        if(cardCount>=FINDER_CARD_CAP){moreHidden++;return}
+        cardCount++;
+        const card=document.createElement('div');
+        card.className='finder-card';
+        card.innerHTML=`
+          <div class="finder-card-head">✅ <b>พบคำตอบ</b><span class="finder-badge sigma-num">Σ ${formula.expr}</span></div>
+          <div class="finder-eq">
+            <span class="finder-glyph sigma-serif">
+              <span class="fg-n">${n}</span>
+              <span class="fg-sigma">Σ</span>
+              <span class="fg-k">i=${k}</span>
+            </span>
+            <span class="finder-eq-expr sigma-num">${formula.expr} = ${targetDisplay}</span>
+          </div>
+          <div class="finder-meta sigma-num">ตัวล่าง = <b>${k}</b> &nbsp;⚉&nbsp; ตัวบน = <b>${n}</b></div>
+        `;
+        container.appendChild(card);
+      });
+      if(matches.length>MATCHES_PER_FORMULA_CAP)moreHidden+=matches.length-MATCHES_PER_FORMULA_CAP;
+    });
+    if(moreHidden>0){
+      const note=document.createElement('div');
+      note.className='finder-empty';
+      note.textContent=`ยังมีคำตอบอื่นอีก ${moreHidden} รายการที่ไม่ได้แสดง (จำกัดไว้เพื่อความลื่นไหลของหน้าจอ)`;
+      container.appendChild(note);
+    }
   }
-  results.slice(0,FINDER_RESULT_CAP).forEach(({formula,k,n})=>{
-    const card=document.createElement('div');
-    card.className='finder-card';
-    card.innerHTML=`
-      <div class="finder-card-head">✅ <b>พบคำตอบ</b><span class="finder-badge sigma-num">Σ ${formula.expr}</span></div>
-      <div class="finder-eq">
-        <span class="finder-glyph sigma-serif">
-          <span class="fg-n">${n}</span>
-          <span class="fg-sigma">Σ</span>
-          <span class="fg-k">i=${k}</span>
-        </span>
-        <span class="finder-eq-expr sigma-num">${formula.expr} = ${target_display}</span>
-      </div>
-      <div class="finder-meta sigma-num">ตัวล่าง = <b>${k}</b> &nbsp;⚉&nbsp; ตัวบน = <b>${n}</b></div>
-    `;
-    container.appendChild(card);
-  });
-  if(truncated){
-    const note=document.createElement('div');
-    note.className='finder-empty';
-    note.textContent=`พบทั้งหมด ${results.length} คำตอบ แสดง ${Math.min(FINDER_RESULT_CAP,results.length)} รายการแรก`;
-    container.appendChild(note);
+
+  // แสดงรายชื่อสูตรที่ตรวจแล้วแต่ไม่พบคำตอบ เพื่อยืนยันว่าครบทุกสูตรจริง
+  if(unmatchedEntries.length>0){
+    const list=document.createElement('div');
+    list.className='finder-conditions';
+    list.style.marginTop='6px';
+    list.innerHTML=`<b>ตรวจแล้วแต่ไม่พบคำตอบ (${unmatchedEntries.length} สูตร)</b><br/>${unmatchedEntries.map(e=>e.formula.display).join(' &nbsp;·&nbsp; ')}`;
+    container.appendChild(list);
   }
 }
 
 function runFinderSearch(){
   const targetInput=document.getElementById('finderTarget');
   const target=parseInt(targetInput.value,10);
-  target_display = Number.isFinite(target) ? target.toLocaleString() : '';
   const formulaKey=document.getElementById('finderFormula').value;
   const results_container=document.getElementById('finderResults');
   if(!Number.isInteger(target)){
@@ -305,8 +335,8 @@ function runFinderSearch(){
   }
   results_container.innerHTML='<div class="finder-empty">กำลังค้นหา...</div>';
   setTimeout(()=>{
-    const results=searchSigma(target,formulaKey);
-    renderFinderResults(results, results.length>FINDER_RESULT_CAP);
+    const entries=searchSigma(target,formulaKey);
+    renderFinderResults(entries, target);
   },10);
 }
 
