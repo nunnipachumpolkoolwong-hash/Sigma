@@ -31,7 +31,6 @@
   tbody td{font-family:'Varela Round',sans-serif;font-size:14px;border-bottom:1px solid #EFE9DA;border-left:1px solid #EFE9DA;color:#1B2A4A;height:60px;transition:all 0.15s ease;cursor:pointer}
   tbody td.empty{color:#C9C2B2;cursor:default}tbody td.super{font-weight:700;color:#5B3A8E}
   
-  /* Highlight Effect */
   tbody td.highlight-cell{background-color:#FFEAA7 !important;font-weight:bold;color:#D63031;transform:scale(1.05);box-shadow:0 0 8px rgba(0,0,0,0.15);z-index:1;position:relative}
   
   .section-divider{margin:44px 0 28px;border-top:1px solid #E3DCC8;padding-top:28px}
@@ -80,7 +79,6 @@
   .finder-meta b{color:#1B2A4A}
   .finder-empty{color:#8B8175;font-size:14px;padding:20px;text-align:center}
 
-  /* Style สำหรับหน้าคู่มือและเครดิต */
   .guide-card, .credit-card {
     max-width: 650px;
     margin: 20px auto;
@@ -138,7 +136,6 @@
     border-bottom: none;
   }
 
-  /* Modal แสดงวิธีทำ (Step-by-Step) */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(27, 42, 74, 0.4); backdrop-filter: blur(3px);
@@ -170,6 +167,7 @@
   <button class="tab-btn active" data-tab="table">Sigma Table</button>
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
   <button class="tab-btn" data-tab="customTools">⚡ Custom Formula</button>
+  <button class="tab-btn" data-tab="flashcard">🎴 Flashcard & ฝึกฝน</button>
   <button class="tab-btn" data-tab="guide">📖 คู่มือการใช้งาน</button>
   <button class="tab-btn" data-tab="credit">👥 เครดิต</button>
 </div>
@@ -220,7 +218,7 @@
       <b>เงื่อนไข</b><br/>
       ⚉ ใช้ข้อมูลชุดเดียวกับ Sigma Table (r,c ≤ ขนาดตารางจริง)<br/>
       ⚉ ตัวบน n ≥ ตัวล่าง k<br/>
-      ⚉ ตรวจครบทั้ง 30 สูตรเสมอ และแสดงผลทั้งสูตรที่พบและไม่พบคำตอบ
+      ⚉ ตรวจครบทุกสูตรเสมอ และแสดงผลทั้งสูตรที่พบและไม่พบคำตอบ
     </div>
   </div>
 
@@ -258,7 +256,40 @@
   </div>
 </div>
 
-<!-- Tab 4: Guide (คู่มือการใช้งาน) -->
+<!-- Tab 4: Flashcard & Training -->
+<div id="tabFlashcard" class="tab-panel">
+  <div class="guide-card" style="max-width: 600px;">
+    <h3 class="guide-title sigma-serif">🎴 Flashcard ทบทวนความเข้าใจ</h3>
+    
+    <div id="flashcardBox" style="background:#FAF7EF; border:2px dashed #1B2A4A; border-radius:12px; padding:24px; text-align:center; margin-bottom:20px;">
+      <div style="font-size:14px; color:#8B8175; margin-bottom:8px;" id="fcStepText">ข้อที่ 1/5</div>
+      <div class="sigma-serif" style="font-size:28px; color:#1B2A4A; margin-bottom:16px;" id="fcQuestion">Σ ...</div>
+      
+      <div style="display:flex; justify-content:center; gap:10px; margin-bottom:16px;">
+        <input type="number" id="fcAnswerInput" class="finder-input" placeholder="พิมพ์คำตอบที่คิดได้" style="width:180px; text-align:center; margin:0;" />
+        <button id="fcSubmitBtn" class="finder-btn" style="width:auto; padding:0 20px; margin:0;">ส่งคำตอบ</button>
+      </div>
+
+      <div id="fcFeedback" style="display:none; margin-top:14px; padding:12px; border-radius:8px; font-size:15px; font-weight:bold;"></div>
+      
+      <button id="fcStepBtn" class="a-btn" style="display:none; margin:12px auto 0; background:#F0EBDC;">💡 ดูวิธีคิดอย่างละเอียด (Step-by-Step)</button>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <button id="fcNextBtn" class="finder-btn" style="display:none; width:100%;">ข้อถัดไป ➔</button>
+    </div>
+
+    <!-- ส่วนสรุปผลการวิเคราะห์ -->
+    <div id="fcSummaryBox" style="display:none; background:#FFFDF8; border:2px solid #2F855A; border-radius:12px; padding:20px;">
+      <h4 class="sigma-serif" style="font-size:20px; color:#2F855A; margin:0 0 10px 0;">📊 สรุปผลการฝึกฝน</h4>
+      <p id="fcScoreText" style="font-size:16px; font-weight:bold; color:#1B2A4A; margin-bottom:10px;"></p>
+      <div id="fcAnalysisText" style="background:#FAF7EF; border-left:4px solid #C0392B; padding:12px; border-radius:6px; font-size:14px; line-height:1.6; color:#1B2A4A;"></div>
+      <button id="fcRestartBtn" class="finder-btn" style="margin-top:16px; background:#1B2A4A;">🔄 ลองทำใหม่อีกครั้ง</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 5: Guide (คู่มือการใช้งาน) -->
 <div id="tabGuide" class="tab-panel">
   <div class="guide-card">
     <h3 class="guide-title sigma-serif">📖 คู่มือการใช้งานเว็บแอปพลิเคชัน</h3>
@@ -284,6 +315,13 @@
       </div>
     </div>
 
+    <div class="guide-item">
+      <div class="guide-item-title">4. หน้า Flashcard & ฝึกฝน (ทบทวนความรู้)</div>
+      <div class="guide-item-desc">
+        โหมดฝึกฝนการทำโจทย์แบบ Flashcard ระบบจะสุ่มโจทย์ให้ทดลองคิดคำตอบ หากตอบผิดสามารถกดดูวิธีคิด Step-by-Step ได้ และเมื่อทำครบระบบจะสรุปจุดที่ควรทบทวนให้
+      </div>
+    </div>
+
     <div class="guide-item" style="margin-bottom: 0;">
       <div class="guide-item-title">💡 วิธีดูขั้นตอนการทำ (Step-by-Step)</div>
       <div class="guide-item-desc">
@@ -293,7 +331,7 @@
   </div>
 </div>
 
-<!-- Tab 5: Credit -->
+<!-- Tab 6: Credit -->
 <div id="tabCredit" class="tab-panel">
   <div class="credit-card">
     <h3 class="credit-title sigma-serif">👥 ผู้จัดทำ</h3>
@@ -324,6 +362,8 @@
 <script>
 const MAX_LIMIT=1000,MAX_N=60;
 function factorial(n){if(n<=1)return 1;let r=1;for(let k=2;k<=n;k++)r*=k;return r}
+
+// ตัดส่วนสูตร Exponential ออกแล้ว (เหลือเฉพาะสูตรพื้นฐาน)
 const FORMULAS=[
 {key:'i',display:'f(i) = i',fn:i=>i,expr:'i',strExpr:i=>`${i}`},
 {key:'2i',display:'f(i) = i + i',fn:i=>i+i,expr:'(i + i)',strExpr:i=>`(${i}+${i})`},
@@ -345,21 +385,13 @@ const FORMULAS=[
 {key:'factfact',display:'f(i) = (i!)!',fn:i=>factorial(factorial(i)),expr:'(i!)!',strExpr:i=>`(${i}!)!`},
 {key:'factfact_plus_i',display:'f(i) = (i!)! + i',fn:i=>factorial(factorial(i))+i,expr:'((i!)! + i)',strExpr:i=>`(${i}!)!+${i}`},
 {key:'factfact_minus_i',display:'f(i) = (i!)! − i',fn:i=>factorial(factorial(i))-i,expr:'((i!)! − i)',strExpr:i=>`(${i}!)!−${i}`},
-{key:'factminusfact',display:'f(i) = (i! − i)!',fn:i=>factorial(factorial(i)-i),expr:'(i! − i)!',strExpr:i=>`(${i}!−${i})!`},
-{key:'exp_2',display:'f(i) = 2^i',fn:i=>Math.pow(2,i),expr:'2<sup>i</sup>',strExpr:i=>`2^${i}`},
-{key:'exp_3',display:'f(i) = 3^i',fn:i=>Math.pow(3,i),expr:'3<sup>i</sup>',strExpr:i=>`3^${i}`},
-{key:'exp_4',display:'f(i) = 4^i',fn:i=>Math.pow(4,i),expr:'4<sup>i</sup>',strExpr:i=>`4^${i}`},
-{key:'exp_5',display:'f(i) = 5^i',fn:i=>Math.pow(5,i),expr:'5<sup>i</sup>',strExpr:i=>`5^${i}`},
-{key:'exp_6',display:'f(i) = 6^i',fn:i=>Math.pow(6,i),expr:'6<sup>i</sup>',strExpr:i=>`6^${i}`},
-{key:'exp_7',display:'f(i) = 7^i',fn:i=>Math.pow(7,i),expr:'7<sup>i</sup>',strExpr:i=>`7^${i}`},
-{key:'exp_8',display:'f(i) = 8^i',fn:i=>Math.pow(8,i),expr:'8<sup>i</sup>',strExpr:i=>`8^${i}`},
-{key:'exp_9',display:'f(i) = 9^i',fn:i=>Math.pow(9,i),expr:'9<sup>i</sup>',strExpr:i=>`9^${i}`},
-{key:'exp_10',display:'f(i) = 10^i',fn:i=>Math.pow(10,i),expr:'10<sup>i</sup>',strExpr:i=>`10^${i}`}
+{key:'factminusfact',display:'f(i) = (i! − i)!',fn:i=>factorial(factorial(i)-i),expr:'(i! − i)!',strExpr:i=>`(${i}!−${i})!`}
 ];
+
 let selectedKey='i';
 const TRIVIA={i:'Σi = n(n+1) / 2','2i':'Σ(i+i) = n(n+1)',i2:'Σi² = n(n+1)(2n+1) / 6',i3:'Σi³ = [ n(n+1)/2 ]²',over:'Σ(i/i) = n',im1:'Σ(i−1) = n(n−1) / 2',fact:'ไม่มีสูตรปิด (closed form) — ต้องบวกทีละพจน์'};
 const NO_FORMULA_MSG='ไม่มีสูตรปิด (closed form) — ต้องบวกทีละพจน์';
-function getTrivia(key){if(TRIVIA[key])return TRIVIA[key];if(key.startsWith('exp_')){const a=key.split('_')[1];return `Σ${a}ⁱ = (${a}ᵐ − ${a}⁽ⁿ⁺¹⁾) / (1 − ${a})`}return NO_FORMULA_MSG}
+function getTrivia(key){return TRIVIA[key] ? TRIVIA[key] : NO_FORMULA_MSG;}
 function computeTable(formula){let cum=0,n=0;const pfx=[0];let hitCap=false;while(n<MAX_N){const val=formula.fn(n+1);if(!Number.isFinite(val)||cum+val>MAX_LIMIT)break;cum+=val;n++;pfx.push(cum)}if(n>=MAX_N)hitCap=true;return{N:n,prefix:pfx,capped:hitCap}}
 
 // Modal Script
@@ -394,7 +426,6 @@ modalCloseBtn.addEventListener('click', () => stepModal.classList.remove('active
 stepModal.addEventListener('click', (e) => { if(e.target === stepModal) stepModal.classList.remove('active'); });
 document.addEventListener('keydown', (e) => { if(e.key === 'Escape') stepModal.classList.remove('active'); });
 
-// ระบบ Hover & Click Effect
 function attachTableInteractions(table, getFnObj){
   table.addEventListener('mouseover', e => {
     const td = e.target.closest('td');
@@ -440,6 +471,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     if(tabName==='table') document.getElementById('tabTable').classList.add('active');
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
+    else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
     else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
     else if(tabName==='credit') document.getElementById('tabCredit').classList.add('active');
   });
@@ -451,6 +483,7 @@ const MATCHES_PER_FORMULA_CAP = 5;
 
 (function populateFinderFormulaSelect(){
   const sel = document.getElementById('finderFormula');
+  sel.innerHTML = '<option value="all">ค้นหาทั้งหมด</option>';
   FORMULAS.forEach(f=>{
     const opt = document.createElement('option');
     opt.value = f.key;
@@ -633,6 +666,115 @@ document.getElementById('buildCustomTableBtn').addEventListener('click', renderC
 document.getElementById('customFormulaInput').addEventListener('keydown', e => { if(e.key==='Enter') renderCustomSigmaTable(); });
 
 renderCustomSigmaTable();
+
+// ===== Flashcard System Logic =====
+const FC_TOTAL = 5;
+let fcCurrentIndex = 0;
+let fcScore = 0;
+let fcQuestions = [];
+let fcMistakes = [];
+let fcCurrentQ = null;
+
+function generateFlashcards() {
+  fcQuestions = [];
+  fcMistakes = [];
+  fcCurrentIndex = 0;
+  fcScore = 0;
+
+  for (let i = 0; i < FC_TOTAL; i++) {
+    const formula = FORMULAS[Math.floor(Math.random() * 6)];
+    const k = Math.floor(Math.random() * 3) + 1;
+    const n = k + Math.floor(Math.random() * 4) + 1;
+    
+    let ans = 0;
+    for (let x = k; x <= n; x++) ans += formula.fn(x);
+
+    fcQuestions.push({ k, n, formula, ans });
+  }
+}
+
+function renderFlashcard() {
+  if (fcCurrentIndex >= FC_TOTAL) {
+    showFcSummary();
+    return;
+  }
+
+  fcCurrentQ = fcQuestions[fcCurrentIndex];
+  document.getElementById('fcStepText').textContent = `ข้อที่ ${fcCurrentIndex + 1} / ${FC_TOTAL}`;
+  document.getElementById('fcQuestion').innerHTML = `
+    <span class="glyph"><span class="glyph-stack"><span class="glyph-n">${fcCurrentQ.n}</span><span class="glyph-sigma">Σ</span><span class="glyph-k">i=${fcCurrentQ.k}</span></span><span class="glyph-expr">${fcCurrentQ.formula.expr}</span></span>
+  `;
+
+  document.getElementById('fcAnswerInput').value = '';
+  document.getElementById('fcAnswerInput').disabled = false;
+  document.getElementById('fcSubmitBtn').style.display = 'inline-block';
+  document.getElementById('fcFeedback').style.display = 'none';
+  document.getElementById('fcStepBtn').style.display = 'none';
+  document.getElementById('fcNextBtn').style.display = 'none';
+}
+
+document.getElementById('fcSubmitBtn').addEventListener('click', () => {
+  const userAns = parseInt(document.getElementById('fcAnswerInput').value, 10);
+  if (isNaN(userAns)) return;
+
+  const fb = document.getElementById('fcFeedback');
+  fb.style.display = 'block';
+
+  if (userAns === fcCurrentQ.ans) {
+    fb.style.background = '#eaf4ec';
+    fb.style.color = '#2F855A';
+    fb.textContent = '🎉 ถูกต้อง! เก่งมากครับ';
+    fcScore++;
+  } else {
+    fb.style.background = '#fde8e8';
+    fb.style.color = '#C0392B';
+    fb.textContent = `❌ ยังไม่ถูกต้อง (คำตอบที่ถูกคือ ${fcCurrentQ.ans.toLocaleString()})`;
+    fcMistakes.push(fcCurrentQ.formula.display);
+  }
+
+  document.getElementById('fcAnswerInput').disabled = true;
+  document.getElementById('fcSubmitBtn').style.display = 'none';
+  document.getElementById('fcStepBtn').style.display = 'block';
+  document.getElementById('fcNextBtn').style.display = 'block';
+});
+
+document.getElementById('fcStepBtn').addEventListener('click', () => {
+  if (fcCurrentQ) {
+    openModal(fcCurrentQ.k, fcCurrentQ.n, fcCurrentQ.formula, fcCurrentQ.ans);
+  }
+});
+
+document.getElementById('fcNextBtn').addEventListener('click', () => {
+  fcCurrentIndex++;
+  renderFlashcard();
+});
+
+function showFcSummary() {
+  document.getElementById('flashcardBox').style.display = 'none';
+  document.getElementById('fcNextBtn').style.display = 'none';
+  const summaryBox = document.getElementById('fcSummaryBox');
+  summaryBox.style.display = 'block';
+
+  document.getElementById('fcScoreText').textContent = `คุณทำได้ ${fcScore} / ${FC_TOTAL} คะแนน`;
+
+  const analysis = document.getElementById('fcAnalysisText');
+  if (fcScore === FC_TOTAL) {
+    analysis.innerHTML = '<b>วิเคราะห์ผล:</b> ยอดเยี่ยมมาก! คุณมีความเข้าใจเกี่ยวกับสูตรและการคำนวณ Sigma เป็นอย่างดี แม่นยำทุกข้อ!';
+  } else {
+    const uniqueMistakes = [...new Set(fcMistakes)].join(', ');
+    analysis.innerHTML = `<b>วิเคราะห์จุดที่ควรทบทวน:</b> จากการทดสอบ คุณอาจยังสับสนในสูตรต่อไปนี้: <br/><b>${uniqueMistakes}</b><br/>💡 <i>แนะนำให้ลองกลับไปกดดูวิธีคิดในหน้า <b>Sigma Table</b> เพื่อเพิ่มความแม่นยำครับ</i>`;
+  }
+}
+
+document.getElementById('fcRestartBtn').addEventListener('click', () => {
+  document.getElementById('flashcardBox').style.display = 'block';
+  document.getElementById('fcSummaryBox').style.display = 'none';
+  generateFlashcards();
+  renderFlashcard();
+});
+
+generateFlashcards();
+renderFlashcard();
 </script>
 </body>
 </html>
