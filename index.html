@@ -169,6 +169,41 @@
     font-size: 42px; font-weight: bold; color: #E67E22; margin: 15px 0;
     background: #FAF7EF; border: 2px dashed #E67E22; border-radius: 12px; padding: 15px;
   }
+
+  /* Style สำหรับ Planner Tab & Notification Modal */
+  .task-item {
+    background: #FFFDF8; border: 1.5px solid #E3DCC8; border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center;
+    justify-content: space-between; gap: 12px; transition: all 0.2s ease;
+  }
+  .task-item.completed { opacity: 0.6; background: #F0EBDC; text-decoration: line-through; }
+  .task-info { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+  .task-title { font-weight: 700; font-size: 15px; color: #1B2A4A; }
+  .task-meta { font-size: 12px; color: #8B8175; font-family: 'Varela Round', sans-serif; }
+  .task-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: bold; width: fit-content;
+  }
+  .tag-high { background: #FDE8E8; color: #C0392B; }
+  .tag-med { background: #FEF9E7; color: #D68910; }
+  .tag-low { background: #EAF4EC; color: #2F855A; }
+  .btn-done {
+    background: #2F855A; color: #fff; border: none; padding: 6px 14px;
+    border-radius: 6px; font-family: 'Mali', cursive; font-size: 13px;
+    font-weight: bold; cursor: pointer; transition: background 0.15s ease;
+  }
+  .btn-done:hover { background: #236644; }
+  .btn-del {
+    background: transparent; color: #C0392B; border: 1px solid #C0392B;
+    padding: 5px 10px; border-radius: 6px; font-family: 'Mali', cursive;
+    font-size: 12px; cursor: pointer;
+  }
+  .btn-del:hover { background: #C0392B; color: #fff; }
+  .notify-task-card {
+    background: #FAF7EF; border: 1px solid #E3DCC8; border-radius: 8px;
+    padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between;
+    align-items: center; gap: 10px;
+  }
 </style>
 </head>
 <body>
@@ -179,6 +214,7 @@
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
   <button class="tab-btn" data-tab="customTools">Custom Formula</button>
   <button class="tab-btn" data-tab="flashcard">Flashcard & ฝึกฝน</button>
+  <button class="tab-btn" data-tab="planner">📅 Planner & การบ้าน</button>
   <button class="tab-btn" data-tab="streak">Streak & บัญชี</button>
   <button class="tab-btn" data-tab="guide">คู่มือการใช้งาน</button>
   <button class="tab-btn" data-tab="credit">เครดิต</button>
@@ -300,7 +336,42 @@
   </div>
 </div>
 
-<!-- Tab 5: Streak & User Account -->
+<!-- Tab 5: Planner & Daily Tasks (เพิ่มเข้ามาใหม่) -->
+<div id="tabPlanner" class="tab-panel">
+  <div class="finder-layout">
+    <!-- ฟอร์มเพิ่ม Planner -->
+    <div class="finder-panel">
+      <h3 class="sigma-serif">➕ เพิ่มแผนงาน / การบ้าน</h3>
+      <label class="finder-label">ชื่อกิจกรรมหรือการบ้าน</label>
+      <input type="text" id="plannerTaskTitle" class="finder-input" placeholder="เช่น ทำแบบฝึกหัด Sigma ข้อ 1-5" />
+
+      <label class="finder-label">วันที่ต้องทำ</label>
+      <input type="date" id="plannerTaskDate" class="finder-input" />
+
+      <label class="finder-label">เวลา (ไม่บังคับ)</label>
+      <input type="time" id="plannerTaskTime" class="finder-input" />
+
+      <label class="finder-label">ความสำคัญ</label>
+      <select id="plannerTaskPriority" class="finder-select">
+        <option value="med">ปานกลาง 🟡</option>
+        <option value="high">สำคัญมาก 🔴</option>
+        <option value="low">ทั่วไป 🟢</option>
+      </select>
+
+      <button id="addPlannerTaskBtn" class="finder-btn">บันทึกแผนงาน</button>
+    </div>
+
+    <!-- รายการ Planner ทั้งหมด -->
+    <div class="finder-panel">
+      <h3 class="sigma-serif">📋 รายการงานทั้งหมด</h3>
+      <div id="plannerTaskList" style="display:flex; flex-direction:column; gap:10px;">
+        <!-- รายการจะมาโผล่ตรงนี้ -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 6: Streak & User Account -->
 <div id="tabStreak" class="tab-panel">
   <div class="streak-card">
     <!-- หน้าจอล็อกอิน -->
@@ -324,7 +395,7 @@
   </div>
 </div>
 
-<!-- Tab 6: Guide -->
+<!-- Tab 7: Guide -->
 <div id="tabGuide" class="tab-panel">
   <div class="guide-card">
     <h3 class="guide-title sigma-serif">📖 คู่มือการใช้งานเว็บแอปพลิเคชัน</h3>
@@ -358,7 +429,14 @@
     </div>
 
     <div class="guide-item">
-      <div class="guide-item-title">5. หน้า Streak & บัญชีผู้ใช้งาน</div>
+      <div class="guide-item-title">5. หน้า Planner & การบ้าน (วางแผนประจำวัน)</div>
+      <div class="guide-item-desc">
+        วางแผนสิ่งที่คุณต้องทำประจำวัน เมื่อเปิดหน้าเว็บขึ้นมาระบบจะเด้งป๊อปอัพแจ้งเตือนรายการที่ต้องทำของวันนั้นให้ทันที เมื่อทำเสร็จสามารถกดปุ่ม "เสร็จสิ้น" เพื่อหยุดการแจ้งเตือนได้
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-item-title">6. หน้า Streak & บัญชีผู้ใช้งาน</div>
       <div class="guide-item-desc">
         ตั้งชื่อผู้ใช้เพื่อเริ่มเก็บสตรีคการทำแบบฝึกหัดต่อเนื่อง คุณสามารถเข้ามาทำแบบฝึกหัดกี่รอบก็ได้ในแต่ละวัน โดยไฟสตรีคจะเพิ่มขึ้นวันละ 1 ครั้งเมื่อเข้าทำในแต่ละวัน
       </div>
@@ -373,7 +451,7 @@
   </div>
 </div>
 
-<!-- Tab 7: Credit -->
+<!-- Tab 8: Credit -->
 <div id="tabCredit" class="tab-panel">
   <div class="credit-card">
     <h3 class="credit-title sigma-serif">👥 ผู้จัดทำ</h3>
@@ -397,6 +475,22 @@
       <div id="modalInfo"><b>ขอบเขต:</b> เริ่มจาก i = <span id="modalK"></span> ถึง <span id="modalN"></span> <span id="modalCond" style="color:#C0392B; font-weight:bold;"></span></div>
       <div class="modal-eq sigma-num" id="modalResult"></div>
       <div class="modal-steps-container" id="modalStepsContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal เด้งแจ้งเตือนตอนเปิดเว็บ (Notification Pop-up) -->
+<div id="notifyModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title sigma-serif">🔔 รายการงานประจำวันนี้!</h3>
+      <button class="modal-close" id="notifyModalCloseBtn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0; color:#8B8175; font-size:13.5px;">สิ่งที่คุณต้องทำในวันนี้ อย่าลืมทำแล้วกด "เสร็จสิ้น" นะครับ!</p>
+      <div id="notifyTaskList">
+        <!-- รายการงานของวันนี้จะแสดงตรงนี้ -->
+      </div>
     </div>
   </div>
 </div>
@@ -513,6 +607,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
     else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
+    else if(tabName==='planner') document.getElementById('tabPlanner').classList.add('active');
     else if(tabName==='streak') document.getElementById('tabStreak').classList.add('active');
     else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
     else if(tabName==='credit') document.getElementById('tabCredit').classList.add('active');
@@ -807,7 +902,6 @@ function showFcSummary() {
     analysis.innerHTML = `<b>วิเคราะห์จุดที่ควรทบทวน:</b> จากการทดสอบ คุณอาจยังสับสนในสูตรต่อไปนี้: <br/><b>${uniqueMistakes}</b><br/>💡 <i>แนะนำให้ลองกลับไปกดดูวิธีคิดในหน้า <b>Sigma Table</b> เพื่อเพิ่มความแม่นยำครับ</i>`;
   }
 
-  // สะสม Streak ให้อัตโนมัติเมื่อทำ Flashcard ครบ
   if (currentStreakUser) {
     addStreakProgress();
   }
@@ -822,6 +916,132 @@ document.getElementById('fcRestartBtn').addEventListener('click', () => {
 
 generateFlashcards();
 renderFlashcard();
+
+// ===== Planner & Notification Logic (เพิ่มเข้ามาใหม่) =====
+let plannerTasks = JSON.parse(localStorage.getItem('sigma_planner_tasks')) || [];
+
+// ใส่วันที่ปัจจุบันใน input เสมอ
+document.getElementById('plannerTaskDate').valueStr = new Date().toISOString().split('T')[0];
+document.getElementById('plannerTaskDate').value = new Date().toISOString().split('T')[0];
+
+function savePlannerTasks() {
+  localStorage.setItem('sigma_planner_tasks', JSON.stringify(plannerTasks));
+  renderPlannerTasks();
+}
+
+function renderPlannerTasks() {
+  const container = document.getElementById('plannerTaskList');
+  container.innerHTML = '';
+
+  if (plannerTasks.length === 0) {
+    container.innerHTML = '<div class="finder-empty">ยังไม่มีแผนงาน กรอกฟอร์มทางซ้ายเพื่อเพิ่มงานได้เลยครับ</div>';
+    return;
+  }
+
+  // เรียงลำดับ: งานที่ยังไม่เสร็จขึ้นก่อน
+  plannerTasks.sort((a,b) => a.completed - b.completed);
+
+  plannerTasks.forEach(task => {
+    const item = document.createElement('div');
+    item.className = `task-item ${task.completed ? 'completed' : ''}`;
+
+    let tagClass = 'tag-med', tagLabel = 'ปานกลาง';
+    if(task.priority === 'high') { tagClass = 'tag-high'; tagLabel = 'สำคัญมาก'; }
+    if(task.priority === 'low') { tagClass = 'tag-low'; tagLabel = 'ทั่วไป'; }
+
+    item.innerHTML = `
+      <div class="task-info">
+        <span class="task-tag ${tagClass}">${tagLabel}</span>
+        <div class="task-title">${task.title}</div>
+        <div class="task-meta">📅 ${task.date} ${task.time ? '| ⏰ ' + task.time : ''}</div>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        ${!task.completed ? `<button class="btn-done" onclick="toggleTaskDone('${task.id}')">✓ เสร็จสิ้น</button>` : '<span style="color:#2F855A; font-size:12px; font-weight:bold;">เสร็จแล้ว</span>'}
+        <button class="btn-del" onclick="deleteTask('${task.id}')">ลบ</button>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+document.getElementById('addPlannerTaskBtn').addEventListener('click', () => {
+  const title = document.getElementById('plannerTaskTitle').value.trim();
+  const date = document.getElementById('plannerTaskDate').value;
+  const time = document.getElementById('plannerTaskTime').value;
+  const priority = document.getElementById('plannerTaskPriority').value;
+
+  if (!title || !date) {
+    alert('กรุณากรอกชื่อกิจกรรมและวันที่ด้วยครับ');
+    return;
+  }
+
+  const newTask = {
+    id: 'task_' + Date.now(),
+    title,
+    date,
+    time,
+    priority,
+    completed: false
+  };
+
+  plannerTasks.push(newTask);
+  savePlannerTasks();
+
+  document.getElementById('plannerTaskTitle').value = '';
+  document.getElementById('plannerTaskTime').value = '';
+});
+
+function toggleTaskDone(id) {
+  const task = plannerTasks.find(t => t.id === id);
+  if (task) {
+    task.completed = true;
+    savePlannerTasks();
+    checkTodayNotifications(); // อัปเดตการเด้งเตือน
+  }
+}
+
+function deleteTask(id) {
+  plannerTasks = plannerTasks.filter(t => t.id !== id);
+  savePlannerTasks();
+  checkTodayNotifications();
+}
+
+// ระบบเด้งแจ้งเตือนตอนเปิดเว็บ
+const notifyModal = document.getElementById('notifyModal');
+document.getElementById('notifyModalCloseBtn').addEventListener('click', () => notifyModal.classList.remove('active'));
+
+function checkTodayNotifications() {
+  const today = new Date().toISOString().split('T')[0];
+  // กรองเฉพาะงานของวันนี้ที่ยังทำไม่เสร็จ
+  const todayTasks = plannerTasks.filter(t => t.date === today && !t.completed);
+
+  const container = document.getElementById('notifyTaskList');
+  container.innerHTML = '';
+
+  if (todayTasks.length > 0) {
+    todayTasks.forEach(task => {
+      const card = document.createElement('div');
+      card.className = 'notify-task-card';
+      card.innerHTML = `
+        <div>
+          <div style="font-weight:bold; color:#1B2A4A; font-size:14.5px;">📌 ${task.title}</div>
+          <div style="font-size:12px; color:#8B8175;">⏰ เวลา: ${task.time ? task.time : 'ไม่ระบุ'}</div>
+        </div>
+        <button class="btn-done" onclick="toggleTaskDone('${task.id}')">✓ กดเสร็จสิ้นเพื่อหยุดเตือน</button>
+      `;
+      container.appendChild(card);
+    });
+    notifyModal.classList.add('active');
+  } else {
+    notifyModal.classList.remove('active');
+  }
+}
+
+// เรียกให้แสดงผล Planner และเช็กการแจ้งเตือนเมื่อเปิดเว็บ
+renderPlannerTasks();
+window.addEventListener('load', () => {
+  setTimeout(checkTodayNotifications, 500);
+});
 
 // ===== Streak & User Account Logic =====
 let currentStreakUser = null;
