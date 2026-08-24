@@ -158,6 +158,17 @@
   .step-line { margin-bottom: 8px; }
   .step-line:last-child { margin-bottom: 0; }
   .step-label { font-weight: bold; color: #8B8175; font-size: 12px; }
+
+  /* Style สำหรับ Streak */
+  .streak-card {
+    background: #FFFDF8; border: 2px solid #1B2A4A; border-radius: 16px;
+    padding: 24px; max-width: 450px; margin: 20px auto; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .streak-count-box {
+    font-size: 42px; font-weight: bold; color: #E67E22; margin: 15px 0;
+    background: #FAF7EF; border: 2px dashed #E67E22; border-radius: 12px; padding: 15px;
+  }
 </style>
 </head>
 <body>
@@ -166,10 +177,11 @@
 <div class="tabs">
   <button class="tab-btn active" data-tab="table">Sigma Table</button>
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
-  <button class="tab-btn" data-tab="customTools">⚡ Custom Formula</button>
-  <button class="tab-btn" data-tab="flashcard">🎴 Flashcard & ฝึกฝน</button>
-  <button class="tab-btn" data-tab="guide">📖 คู่มือการใช้งาน</button>
-  <button class="tab-btn" data-tab="credit">👥 เครดิต</button>
+  <button class="tab-btn" data-tab="customTools">Custom Formula</button>
+  <button class="tab-btn" data-tab="flashcard">Flashcard & ฝึกฝน</button>
+  <button class="tab-btn" data-tab="streak">Streak & บัญชี</button>
+  <button class="tab-btn" data-tab="guide">คู่มือการใช้งาน</button>
+  <button class="tab-btn" data-tab="credit">เครดิต</button>
 </div>
 
 <!-- Tab 1: Sigma Table -->
@@ -266,7 +278,7 @@
       <div class="sigma-serif" style="font-size:28px; color:#1B2A4A; margin-bottom:16px;" id="fcQuestion">Σ ...</div>
       
       <div style="display:flex; justify-content:center; gap:10px; margin-bottom:16px;">
-        <input type="number" id="fcAnswerInput" class="finder-input" placeholder="พิมพ์คำตอบที่คิดได้" style="width:180px; text-align:center; margin:0;" />
+        <input type="number" id="fcAnswerInput" class="finder-input" placeholder="พิมพ์คำตอบที่หาได้" style="width:180px; text-align:center; margin:0;" />
         <button id="fcSubmitBtn" class="finder-btn" style="width:auto; padding:0 20px; margin:0;">ส่งคำตอบ</button>
       </div>
 
@@ -279,7 +291,6 @@
       <button id="fcNextBtn" class="finder-btn" style="display:none; width:100%;">ข้อถัดไป ➔</button>
     </div>
 
-    <!-- ส่วนสรุปผลการวิเคราะห์ -->
     <div id="fcSummaryBox" style="display:none; background:#FFFDF8; border:2px solid #2F855A; border-radius:12px; padding:20px;">
       <h4 class="sigma-serif" style="font-size:20px; color:#2F855A; margin:0 0 10px 0;">📊 สรุปผลการฝึกฝน</h4>
       <p id="fcScoreText" style="font-size:16px; font-weight:bold; color:#1B2A4A; margin-bottom:10px;"></p>
@@ -289,7 +300,31 @@
   </div>
 </div>
 
-<!-- Tab 5: Guide (คู่มือการใช้งาน) -->
+<!-- Tab 5: Streak & User Account -->
+<div id="tabStreak" class="tab-panel">
+  <div class="streak-card">
+    <!-- หน้าจอล็อกอิน -->
+    <div id="streakLoginBox">
+      <h3 class="sigma-serif" style="font-size:22px; color:#1B2A4A; margin-bottom:12px;">👤 บัญชีผู้ใช้งาน</h3>
+      <p style="font-size:13.5px; color:#8B8175; margin-bottom:16px;">ระบุชื่อเพื่อบันทึกและสะสมไฟสตรีคการทำแบบฝึกหัด</p>
+      <input type="text" id="streakUsername" class="finder-input" placeholder="พิมพ์ชื่อผู้ใช้..." style="text-align:center;" />
+      <button id="streakLoginBtn" class="finder-btn" style="margin-bottom:0;">เข้าสู่ระบบ / บันทึกชื่อ</button>
+    </div>
+
+    <!-- หน้าจอแสดงสตรีค -->
+    <div id="streakAppBox" style="display:none;">
+      <h3 class="sigma-serif" id="streakUserDisplay" style="font-size:20px; color:#1B2A4A; margin:0;"></h3>
+      <div class="streak-count-box sigma-num">🔥 <span id="streakDays">0</span> วัน</div>
+      <div style="font-size:15px; color:#1B2A4A; margin-bottom:8px;">ทำแบบฝึกหัดไปแล้วทั้งหมด: <b class="sigma-num" id="streakTotalDone" style="color:#2F855A;">0</b> ครั้ง</div>
+      <p id="streakStatusText" style="font-size:13px; color:#8B8175; margin-bottom:20px;"></p>
+      
+      <button id="streakActionBtn" class="finder-btn" style="background:#2F855A;">📝 ทำแบบฝึกหัดแล้ว (+1 ครั้ง)</button>
+      <button id="streakLogoutBtn" class="a-btn" style="width:100%; color:#C0392B; border-color:#C0392B;">ออกจากระบบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 6: Guide -->
 <div id="tabGuide" class="tab-panel">
   <div class="guide-card">
     <h3 class="guide-title sigma-serif">📖 คู่มือการใช้งานเว็บแอปพลิเคชัน</h3>
@@ -318,7 +353,14 @@
     <div class="guide-item">
       <div class="guide-item-title">4. หน้า Flashcard & ฝึกฝน (ทบทวนความรู้)</div>
       <div class="guide-item-desc">
-        โหมดฝึกฝนการทำโจทย์แบบ Flashcard ระบบจะสุ่มโจทย์ให้ทดลองคิดคำตอบ หากตอบผิดสามารถกดดูวิธีคิด Step-by-Step ได้ และเมื่อทำครบระบบจะสรุปจุดที่ควรทบทวนให้
+        โหมดฝึกฝนการทำโจทย์แบบ Flashcard ระบบจะสุ่มโจทย์ให้ทดลองคิดคำตอบ หากตอบผิดสามารถกดดูวิธีคิด Step-by-Step ได้ เมื่อทำครบระบบจะบันทึกการส่งงานเพิ่มสตรีคให้อัตโนมัติ!
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-item-title">5. หน้า Streak & บัญชีผู้ใช้งาน</div>
+      <div class="guide-item-desc">
+        ตั้งชื่อผู้ใช้เพื่อเริ่มเก็บสตรีคการทำแบบฝึกหัดต่อเนื่อง คุณสามารถเข้ามาทำแบบฝึกหัดกี่รอบก็ได้ในแต่ละวัน โดยไฟสตรีคจะเพิ่มขึ้นวันละ 1 ครั้งเมื่อเข้าทำในแต่ละวัน
       </div>
     </div>
 
@@ -331,7 +373,7 @@
   </div>
 </div>
 
-<!-- Tab 6: Credit -->
+<!-- Tab 7: Credit -->
 <div id="tabCredit" class="tab-panel">
   <div class="credit-card">
     <h3 class="credit-title sigma-serif">👥 ผู้จัดทำ</h3>
@@ -363,7 +405,6 @@
 const MAX_LIMIT=1000,MAX_N=60;
 function factorial(n){if(n<=1)return 1;let r=1;for(let k=2;k<=n;k++)r*=k;return r}
 
-// ตัดส่วนสูตร Exponential ออกแล้ว (เหลือเฉพาะสูตรพื้นฐาน)
 const FORMULAS=[
 {key:'i',display:'f(i) = i',fn:i=>i,expr:'i',strExpr:i=>`${i}`},
 {key:'2i',display:'f(i) = i + i',fn:i=>i+i,expr:'(i + i)',strExpr:i=>`(${i}+${i})`},
@@ -472,6 +513,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
     else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
+    else if(tabName==='streak') document.getElementById('tabStreak').classList.add('active');
     else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
     else if(tabName==='credit') document.getElementById('tabCredit').classList.add('active');
   });
@@ -764,6 +806,11 @@ function showFcSummary() {
     const uniqueMistakes = [...new Set(fcMistakes)].join(', ');
     analysis.innerHTML = `<b>วิเคราะห์จุดที่ควรทบทวน:</b> จากการทดสอบ คุณอาจยังสับสนในสูตรต่อไปนี้: <br/><b>${uniqueMistakes}</b><br/>💡 <i>แนะนำให้ลองกลับไปกดดูวิธีคิดในหน้า <b>Sigma Table</b> เพื่อเพิ่มความแม่นยำครับ</i>`;
   }
+
+  // สะสม Streak ให้อัตโนมัติเมื่อทำ Flashcard ครบ
+  if (currentStreakUser) {
+    addStreakProgress();
+  }
 }
 
 document.getElementById('fcRestartBtn').addEventListener('click', () => {
@@ -775,6 +822,75 @@ document.getElementById('fcRestartBtn').addEventListener('click', () => {
 
 generateFlashcards();
 renderFlashcard();
+
+// ===== Streak & User Account Logic =====
+let currentStreakUser = null;
+
+function loadStreakUserData() {
+  if (!currentStreakUser) return;
+  const data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
+  const today = new Date().toISOString().split('T')[0];
+
+  if (data.lastDate) {
+    const last = new Date(data.lastDate);
+    const now = new Date(today);
+    const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays > 1) {
+      data.streak = 0;
+      localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
+    }
+  }
+
+  document.getElementById('streakDays').textContent = data.streak;
+  document.getElementById('streakTotalDone').textContent = data.totalDone || 0;
+
+  if (data.lastDate === today) {
+    document.getElementById('streakStatusText').textContent = '⚡ วันนี้จุดไฟสตรีคแล้ว! (ทำแบบฝึกหัดเพิ่มได้เรื่อยๆ)';
+  } else {
+    document.getElementById('streakStatusText').textContent = '📌 อย่าลืมกดทำแบบฝึกหัดวันนี้เพื่อเก็บไฟสตรีคนะครับ!';
+  }
+}
+
+function addStreakProgress() {
+  if (!currentStreakUser) return;
+  const today = new Date().toISOString().split('T')[0];
+  let data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
+
+  data.totalDone = (data.totalDone || 0) + 1;
+
+  if (data.lastDate !== today) {
+    data.streak += 1;
+    data.lastDate = today;
+    alert(`🎉 ยินดีด้วยคุณ ${currentStreakUser}! จุดไฟสตรีคสำเร็จ เพิ่มเป็น ${data.streak} วันแล้ว 🔥`);
+  } else {
+    alert(`👍 เก่งมาก! สะสมรอบทำแบบฝึกหัดเพิ่มอีก 1 ครั้ง (รวม ${data.totalDone} ครั้ง)`);
+  }
+
+  localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
+  loadStreakUserData();
+}
+
+document.getElementById('streakLoginBtn').addEventListener('click', () => {
+  const username = document.getElementById('streakUsername').value.trim();
+  if (!username) return alert('กรุณาพิมพ์ชื่อผู้ใช้งานก่อนครับ');
+  currentStreakUser = username;
+  document.getElementById('streakLoginBox').style.display = 'none';
+  document.getElementById('streakAppBox').style.display = 'block';
+  document.getElementById('streakUserDisplay').textContent = `สวัสดีคุณ ${currentStreakUser}`;
+  loadStreakUserData();
+});
+
+document.getElementById('streakActionBtn').addEventListener('click', () => {
+  addStreakProgress();
+});
+
+document.getElementById('streakLogoutBtn').addEventListener('click', () => {
+  currentStreakUser = null;
+  document.getElementById('streakUsername').value = '';
+  document.getElementById('streakLoginBox').style.display = 'block';
+  document.getElementById('streakAppBox').style.display = 'none';
+});
 </script>
 </body>
 </html>
