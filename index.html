@@ -49,7 +49,7 @@
   .trivia-label{font-weight:700;font-size:13px;color:#8B8175;margin-bottom:6px}
   .trivia-formula{font-size:15px;font-weight:700;color:#C0392B}
 
-  .tabs{display:flex;gap:8px;margin-bottom:24px;border-bottom:2px solid #E3DCC8}
+  .tabs{display:flex;gap:8px;margin-bottom:24px;border-bottom:2px solid #E3DCC8;flex-wrap:wrap;}
   .tab-btn{padding:10px 20px;border:none;background:transparent;color:#8B8175;font-family:'Mali',cursive;font-weight:700;font-size:16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s ease}
   .tab-btn:hover{color:#1B2A4A}
   .tab-btn.active{color:#1B2A4A;border-bottom-color:#C0392B}
@@ -80,27 +80,49 @@
   .finder-meta b{color:#1B2A4A}
   .finder-empty{color:#8B8175;font-size:14px;padding:20px;text-align:center}
 
-  /* Style สำหรับหน้าเครดิต */
-  .credit-card {
-    max-width: 450px;
-    margin: 40px auto;
+  /* Style สำหรับหน้าคู่มือและเครดิต */
+  .guide-card, .credit-card {
+    max-width: 650px;
+    margin: 20px auto;
     padding: 30px;
     background: #FFFDF8;
     border: 2px solid #1B2A4A;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
-  .credit-title {
+  .guide-title, .credit-title {
     font-size: 22px;
     font-weight: 700;
-    margin: 0 0 16px 0;
-    padding-bottom: 8px;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
     border-bottom: 2px solid #1B2A4A;
     color: #1B2A4A;
     display: flex;
     align-items: center;
+    gap: 10px;
+  }
+  .guide-item {
+    margin-bottom: 20px;
+    background: #FAF7EF;
+    border: 1px solid #E3DCC8;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .guide-item-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #C0392B;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
     gap: 8px;
   }
+  .guide-item-desc {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #1B2A4A;
+  }
+
   .credit-list {
     list-style: none;
     padding: 0;
@@ -148,6 +170,7 @@
   <button class="tab-btn active" data-tab="table">Sigma Table</button>
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
   <button class="tab-btn" data-tab="customTools">⚡ Custom Formula</button>
+  <button class="tab-btn" data-tab="guide">📖 คู่มือการใช้งาน</button>
   <button class="tab-btn" data-tab="credit">👥 เครดิต</button>
 </div>
 
@@ -235,7 +258,42 @@
   </div>
 </div>
 
-<!-- Tab 4: Credit -->
+<!-- Tab 4: Guide (คู่มือการใช้งาน) -->
+<div id="tabGuide" class="tab-panel">
+  <div class="guide-card">
+    <h3 class="guide-title sigma-serif">📖 คู่มือการใช้งานเว็บแอปพลิเคชัน</h3>
+    
+    <div class="guide-item">
+      <div class="guide-item-title">1. หน้า Sigma Table (ตารางผลรวม)</div>
+      <div class="guide-item-desc">
+        หากต้องการดูสูตรใหม่ ให้กดเลือกปุ่มสูตรบริเวณด้านบนของหน้า **Sigma Table** ตัวเว็บจะแสดงตารางผลรวมของสูตรนั้นๆ ให้ทันที
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-item-title">2. หน้า Sigma Finder (ค้นหาผลรวม)</div>
+      <div class="guide-item-desc">
+        ให้พิมพ์ตัวเลขผลรวมที่ต้องการค้นหาในช่อง แล้วกดปุ่ม **"ค้นหา"** ระบบจะทำการตรวจสอบและแสดงผลลัพธ์ว่าตัวเลขนั้นเกิดจากซิกม่าตัวไหนได้บ้าง
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-item-title">3. หน้า Custom Formula (สูตรกำหนดเอง)</div>
+      <div class="guide-item-desc">
+        เราสามารถคิดคำนวณสูตรใหม่ๆ ได้ด้วยตัวเราเอง โดยพิมพ์สูตรคณิตศาสตร์ที่ต้องการ (ใช้ตัวแปร <b>i</b>) แล้วกดปุ่มสร้างตารางเพื่อดูผลรวม
+      </div>
+    </div>
+
+    <div class="guide-item" style="margin-bottom: 0;">
+      <div class="guide-item-title">💡 วิธีดูขั้นตอนการทำ (Step-by-Step)</div>
+      <div class="guide-item-desc">
+        ผลลัพธ์ในทุกหน้าที่เปิด หากต้องการดูวิธีคิด ให้<b>คลิกที่ตัวเลขที่ต้องการดูวิธีคิด</b> ระบบจะเปิดหน้าต่างแสดงขั้นตอนการแทนค่าและการคำนวณให้อย่างละเอียด
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 5: Credit -->
 <div id="tabCredit" class="tab-panel">
   <div class="credit-card">
     <h3 class="credit-title sigma-serif">👥 ผู้จัดทำ</h3>
@@ -304,14 +362,13 @@ const NO_FORMULA_MSG='ไม่มีสูตรปิด (closed form) — ต
 function getTrivia(key){if(TRIVIA[key])return TRIVIA[key];if(key.startsWith('exp_')){const a=key.split('_')[1];return `Σ${a}ⁱ = (${a}ᵐ − ${a}⁽ⁿ⁺¹⁾) / (1 − ${a})`}return NO_FORMULA_MSG}
 function computeTable(formula){let cum=0,n=0;const pfx=[0];let hitCap=false;while(n<MAX_N){const val=formula.fn(n+1);if(!Number.isFinite(val)||cum+val>MAX_LIMIT)break;cum+=val;n++;pfx.push(cum)}if(n>=MAX_N)hitCap=true;return{N:n,prefix:pfx,capped:hitCap}}
 
-// Modal Script (เพิ่มเงื่อนไข f(i) ในส่วนขอบเขต)
+// Modal Script
 const stepModal = document.getElementById('stepModal');
 const modalCloseBtn = document.getElementById('modalCloseBtn');
 function openModal(k, n, fnObj, totalVal) {
   document.getElementById('modalK').textContent = k;
   document.getElementById('modalN').textContent = n;
   
-  // แสดงเงื่อนไขสูตรต่อท้ายขอบเขต
   const condText = fnObj.display ? ` (เงื่อนไข: ${fnObj.display})` : (fnObj.rawExpr ? ` (เงื่อนไข: f(i) = ${fnObj.rawExpr})` : '');
   document.getElementById('modalCond').textContent = condText;
   
@@ -383,6 +440,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     if(tabName==='table') document.getElementById('tabTable').classList.add('active');
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
+    else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
     else if(tabName==='credit') document.getElementById('tabCredit').classList.add('active');
   });
 });
