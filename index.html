@@ -28,8 +28,12 @@
   thead th{position:sticky;top:0;z-index:2;background:#FFFDF8;border-bottom:2px solid #1B2A4A;font-family:'Mali',cursive;font-weight:700;font-size:15px;color:#B33A3A;height:40px}
   thead th.corner{position:sticky;left:0;top:0;z-index:3;border-right:2px solid #1B2A4A}
   tbody th{position:sticky;left:0;z-index:1;background:#FFFDF8;border-right:2px solid #1B2A4A;border-bottom:1px solid #EFE9DA;font-family:'Mali',cursive;font-weight:700;font-size:15px;color:#2F855A;height:60px}
-  tbody td{font-family:'Varela Round',sans-serif;font-size:14px;border-bottom:1px solid #EFE9DA;border-left:1px solid #EFE9DA;color:#1B2A4A;height:60px}
-  tbody td.empty{color:#C9C2B2}tbody td.super{font-weight:700;color:#5B3A8E}
+  tbody td{font-family:'Varela Round',sans-serif;font-size:14px;border-bottom:1px solid #EFE9DA;border-left:1px solid #EFE9DA;color:#1B2A4A;height:60px;transition:all 0.15s ease;cursor:pointer}
+  tbody td.empty{color:#C9C2B2;cursor:default}tbody td.super{font-weight:700;color:#5B3A8E}
+  
+  /* Highlight Effect */
+  tbody td.highlight-cell{background-color:#FFEAA7 !important;font-weight:bold;color:#D63031;transform:scale(1.05);box-shadow:0 0 8px rgba(0,0,0,0.15);z-index:1;position:relative}
+  
   .section-divider{margin:44px 0 28px;border-top:1px solid #E3DCC8;padding-top:28px}
   h2.sigma-serif{font-size:24px;font-weight:700;margin:0 0 6px}
   .geo-formula-line{display:flex;align-items:center;gap:10px;margin:10px 0 16px;font-size:17px;font-style:italic;flex-wrap:wrap}
@@ -75,6 +79,66 @@
   .finder-meta{margin-top:10px;background:#F0EBDC;border-radius:8px;padding:8px 14px;font-size:13.5px;color:#5b5346;text-align:center}
   .finder-meta b{color:#1B2A4A}
   .finder-empty{color:#8B8175;font-size:14px;padding:20px;text-align:center}
+
+  /* Style สำหรับหน้าเครดิต */
+  .credit-card {
+    max-width: 450px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #FFFDF8;
+    border: 2px solid #1B2A4A;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .credit-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1B2A4A;
+    color: #1B2A4A;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .credit-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .credit-list li {
+    font-size: 16px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #E3DCC8;
+    color: #1B2A4A;
+  }
+  .credit-list li:last-child {
+    border-bottom: none;
+  }
+
+  /* Modal แสดงวิธีทำ (Step-by-Step) */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(27, 42, 74, 0.4); backdrop-filter: blur(3px);
+    display: none; justify-content: center; align-items: center; z-index: 1000;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-card {
+    background: #FFFDF8; border: 2px solid #1B2A4A; border-radius: 16px;
+    padding: 24px; max-width: 550px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    animation: popIn 0.2s ease-out; position: relative;
+  }
+  @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1.5px solid #E3DCC8; padding-bottom: 10px; }
+  .modal-title { font-size: 18px; font-weight: 700; color: #1B2A4A; margin: 0; }
+  .modal-close { background: none; border: none; font-size: 20px; font-weight: 700; cursor: pointer; color: #8B8175; }
+  .modal-close:hover { color: #C0392B; }
+  .modal-body { font-size: 14.5px; line-height: 1.6; color: #1B2A4A; }
+  .modal-eq { background: #F0EBDC; padding: 12px; border-radius: 8px; font-size: 18px; font-weight: 700; text-align: center; margin: 12px 0; color: #C0392B; word-break: break-word; }
+  .modal-steps-container { background: #FAF7EF; border: 1px solid #E3DCC8; border-radius: 8px; padding: 14px; font-family: 'Varela Round', sans-serif; font-size: 14px; max-height: 220px; overflow-y: auto; word-break: break-all; }
+  .step-line { margin-bottom: 8px; }
+  .step-line:last-child { margin-bottom: 0; }
+  .step-label { font-weight: bold; color: #8B8175; font-size: 12px; }
 </style>
 </head>
 <body>
@@ -83,12 +147,15 @@
 <div class="tabs">
   <button class="tab-btn active" data-tab="table">Sigma Table</button>
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
+  <button class="tab-btn" data-tab="customTools">⚡ Custom Formula</button>
+  <button class="tab-btn" data-tab="credit">👥 เครดิต</button>
 </div>
 
+<!-- Tab 1: Sigma Table -->
 <div id="tabTable" class="tab-panel active">
 <h1 class="sigma-serif">ตาราง Sigma — ผลรวมถึง 1000</h1>
-<p class="subtitle">เซลล์ (แถว r, คอลัมน์ c) = ผลรวมของ f(i) ตั้งแต่ i = r ถึง i = c &nbsp;|&nbsp; ขนาดตารางขยายจนค่ารวมสูงสุดใกล้ 1000 ทีสุดโดยไม่เกิน</p>
-<div class="intro-card"><b>ซิกม่า (Σ)</b> คือสัญลักษณ์แทนการบวกเลขต่อเนื่องหลายๆ พจน์ในบรรทัดเดียว แทนที่จะเขียน 1+2+3+...+100 ยาวๆ ก็เขียนสั้นๆ เป็น "ผลรวมของ i ตั้งแต่ i=1 ถึง 100" ได้เลย ตัวเลขข้างบน Σ (คือ n) บอกว่าจะบวกไปถึงไหน ส่วนขางล่าง (i=k) บอกว่าเริ่มบวกจากตรงไหน</div>
+<p class="subtitle">เซลล์ (แถว r, คอลัมน์ c) = ผลรวมของ f(i) ตั้งแต่ i = r ถึง i = c &nbsp;|&nbsp; คลิกที่เซลล์เพื่อดูวิธีทำแบบละเอียด</p>
+<div class="intro-card"><b>ซิกม่า (Σ)</b> คือสัญลักษณ์แทนการบวกเลขต่อเนื่องหลายๆ พจน์ในบรรทัดเดียว แทนที่จะเขียน 1+2+3+...+100 ยาวๆ ก็เขียนสั้นๆ เป็น "ผลรวมของ i ตั้งแต่ i=1 ถึง 100" ได้เลย ตัวเลขข้างบน Σ (คือ n) บอกว่าจะบวกไปถึงไหน ส่วนข้างล่าง (i=k) บอกว่าเริ่มบวกจากตรงไหน</div>
 <div id="formulaGrid" class="formula-grid"></div>
 <div class="formula-line"><span class="lbl">สูตร:</span><span id="formulaCode" class="formula-code sigma-num"></span></div>
 <div class="trivia-card"><div class="trivia-label">สูตรลัด</div><div id="triviaFormula" class="trivia-formula sigma-num"></div></div>
@@ -97,7 +164,7 @@
 
 <div class="section-divider">
 <h2 class="sigma-serif">Sigma Exponential — อนุกรมเรขาคณิต</h2>
-<p class="subtitle" style="margin-bottom:4px;">ซิกม่าเอกซ์โพเนนเชียล คือการหาผลรวมของ a<sup>i</sup></p>
+<p class="subtitle" style="margin-bottom:4px;">ซิกม่าเอกซ์โพเนนเชียล คือการหาผลรวมของ a<sup>i</sup> (คลิกเซลล์เพื่อดูวิธีทำ)</p>
 <div class="geo-formula-line sigma-serif">
 <span class="glyph"><span class="glyph-stack"><span class="glyph-n">n</span><span class="glyph-sigma">Σ</span><span class="glyph-k">i=m</span></span><span class="glyph-expr">a<sup>i</sup></span></span>
 <span>= a<sup>m</sup> + a<sup>m+1</sup> + ⋯ + a<sup>n</sup></span>
@@ -110,11 +177,10 @@
 <div class="grid-scroll"><table id="geoTable"></table></div>
 </div>
 </div>
-<!-- /tabTable -->
 
+<!-- Tab 2: Sigma Finder -->
 <div id="tabFinder" class="tab-panel">
 <div class="finder-layout">
-
   <div class="finder-panel">
     <h3 class="sigma-serif">🔍 ค้นหาค่าผลรวม</h3>
     <label class="finder-label">ผลรวมที่ต้องการ</label>
@@ -141,95 +207,189 @@
       <div class="finder-empty">กรอกผลรวมที่ต้องการแล้วกด "ค้นหา"</div>
     </div>
   </div>
-
 </div>
 </div>
-<!-- /tabFinder -->
 
-<!-- กรอบผู้จัดทำ ข้อความชิดซ้าย -->
-<div style="
-  width: fit-content;
-  min-width: 220px;
-  margin: 40px auto 30px auto;
-  padding: 16px 24px;
-  border: 2px solid #1B2A4A;
-  border-radius: 12px;
-  background-color: #ffffff;
-  font-family: 'Mali', cursive;
-  color: #1B2A4A;
-  text-align: left;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-">
-  <p style="font-weight: 600; font-size: 16px; margin: 0 0 8px 0; border-bottom: 1.5px solid #1B2A4A; padding-bottom: 4px;">ผู้จัดทำ</p>
-  <p style="margin: 4px 0; font-size: 14px;">ด.ญ.นันท์นิภา ช.</p>
-  <p style="margin: 4px 0; font-size: 14px;">ด.ญ.ลลิล ก.</p>
+<!-- Tab 3: Custom Formula -->
+<div id="tabCustomTools" class="tab-panel">
+  <div class="finder-layout">
+    <div class="finder-panel">
+      <h3 class="sigma-serif">✨ สรรสร้างสูตร Custom</h3>
+      <label class="finder-label">กรอกสูตร f(i) เอง (ใช้ตัวแปร i)</label>
+      <input type="text" id="customFormulaInput" class="finder-input" placeholder="เช่น 2*i + 1 หรือ i^2 - 1" value="2*i + 1" />
+      <button id="buildCustomTableBtn" class="finder-btn">คำนวณและสร้างตาราง</button>
+
+      <div class="finder-conditions">
+        <b>คำแนะนำการพิมพ์สูตร</b><br/>
+        ⚉ ตัวแปรให้ใช้ตัวอักษร <b>i</b> เท่านั้น<br/>
+        ⚉ เครื่องหมายที่รองรับ: <b>+</b>, <b>-</b>, <b>*</b> (คูณ), <b>/</b> (หาร), <b>^</b> (ยกกำลัง)<br/>
+        ⚉ ตัวอย่าง: <code>3*i + 2</code>, <code>i^2 + i</code>, <code>i^3 - 1</code>
+      </div>
+    </div>
+
+    <div class="finder-panel">
+      <h3 class="sigma-serif" id="customResultTitle">ตารางผลรวมสูตรกำหนดเอง</h3>
+      <p id="customMetaLine" class="meta"></p>
+      <div class="grid-scroll"><table id="customSigmaTable"></table></div>
+    </div>
+  </div>
 </div>
 
+<!-- Tab 4: Credit -->
+<div id="tabCredit" class="tab-panel">
+  <div class="credit-card">
+    <h3 class="credit-title sigma-serif">👥 ผู้จัดทำ</h3>
+    <ol class="credit-list sigma-serif">
+      <li>1. ด.ญ.นันท์นิภา ช.</li>
+      <li>2. ด.ญ.ลลิล ก.</li>
+    </ol>
+  </div>
+</div>
+
+</div>
+
+<!-- Modal แสดงวิธีทำ -->
+<div id="stepModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title sigma-serif">📝 แสดงวิธีทำ (Step-by-Step)</h3>
+      <button class="modal-close" id="modalCloseBtn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="modalInfo"><b>ขอบเขต:</b> เริ่มจาก i = <span id="modalK"></span> ถึง <span id="modalN"></span> <span id="modalCond" style="color:#C0392B; font-weight:bold;"></span></div>
+      <div class="modal-eq sigma-num" id="modalResult"></div>
+      <div class="modal-steps-container" id="modalStepsContainer"></div>
+    </div>
+  </div>
 </div>
 
 <script>
 const MAX_LIMIT=1000,MAX_N=60;
 function factorial(n){if(n<=1)return 1;let r=1;for(let k=2;k<=n;k++)r*=k;return r}
 const FORMULAS=[
-{key:'i',display:'f(i) = i',fn:i=>i,expr:'i'},
-{key:'2i',display:'f(i) = i + i',fn:i=>i+i,expr:'(i + i)'},
-{key:'i2',display:'f(i) = i × i',fn:i=>i*i,expr:'(i × i)'},
-{key:'i3',display:'f(i) = i³',fn:i=>i*i*i,expr:'i<sup>3</sup>'},
-{key:'over',display:'f(i) = i / i',fn:()=>1,expr:'(i / i)'},
-{key:'fact',display:'f(i) = i!',fn:i=>factorial(i),expr:'(i!)'},
-{key:'factplus_i',display:'f(i) = i! + i',fn:i=>factorial(i)+i,expr:'(i! + i)'},
-{key:'facttimes_i',display:'f(i) = i! × i',fn:i=>factorial(i)*i,expr:'(i! × i)'},
-{key:'factdiv',display:'f(i) = i!/i',fn:i=>factorial(i)/i,expr:'(i! / i)'},
-{key:'factminus_i',display:'f(i) = i! − i',fn:i=>factorial(i)-i,expr:'(i! − i)'},
-{key:'factplusfact',display:'f(i) = i! + i!',fn:i=>factorial(i)+factorial(i),expr:'(i! + i!)'},
-{key:'facttimesfact',display:'f(i) = i! × i!',fn:i=>factorial(i)*factorial(i),expr:'(i! × i!)'},
-{key:'sumfact',display:'f(i) = (i + i)!',fn:i=>factorial(2*i),expr:'(i + i)!'},
-{key:'ipow_i',display:'f(i) = i^i',fn:i=>Math.pow(i,i),expr:'i<sup>i</sup>'},
-{key:'ipow_fact',display:'f(i) = i^(i!)',fn:i=>Math.pow(i,factorial(i)),expr:'i<sup>i!</sup>'},
-{key:'factpow_fact',display:'f(i) = (i!)^(i!)',fn:i=>Math.pow(factorial(i),factorial(i)),expr:'(i!)<sup>i!</sup>'},
-{key:'im1',display:'f(i) = i − 1',fn:i=>i-1,expr:'(i − 1)'},
-{key:'factfact',display:'f(i) = (i!)!',fn:i=>factorial(factorial(i)),expr:'(i!)!'},
-{key:'factfact_plus_i',display:'f(i) = (i!)! + i',fn:i=>factorial(factorial(i))+i,expr:'((i!)! + i)'},
-{key:'factfact_minus_i',display:'f(i) = (i!)! − i',fn:i=>factorial(factorial(i))-i,expr:'((i!)! − i)'},
-{key:'factminusfact',display:'f(i) = (i! − i)!',fn:i=>factorial(factorial(i)-i),expr:'(i! − i)!'},
-{key:'exp_2',display:'f(i) = 2^i',fn:i=>Math.pow(2,i),expr:'2<sup>i</sup>'},
-{key:'exp_3',display:'f(i) = 3^i',fn:i=>Math.pow(3,i),expr:'3<sup>i</sup>'},
-{key:'exp_4',display:'f(i) = 4^i',fn:i=>Math.pow(4,i),expr:'4<sup>i</sup>'},
-{key:'exp_5',display:'f(i) = 5^i',fn:i=>Math.pow(5,i),expr:'5<sup>i</sup>'},
-{key:'exp_6',display:'f(i) = 6^i',fn:i=>Math.pow(6,i),expr:'6<sup>i</sup>'},
-{key:'exp_7',display:'f(i) = 7^i',fn:i=>Math.pow(7,i),expr:'7<sup>i</sup>'},
-{key:'exp_8',display:'f(i) = 8^i',fn:i=>Math.pow(8,i),expr:'8<sup>i</sup>'},
-{key:'exp_9',display:'f(i) = 9^i',fn:i=>Math.pow(9,i),expr:'9<sup>i</sup>'},
-{key:'exp_10',display:'f(i) = 10^i',fn:i=>Math.pow(10,i),expr:'10<sup>i</sup>'}
+{key:'i',display:'f(i) = i',fn:i=>i,expr:'i',strExpr:i=>`${i}`},
+{key:'2i',display:'f(i) = i + i',fn:i=>i+i,expr:'(i + i)',strExpr:i=>`(${i}+${i})`},
+{key:'i2',display:'f(i) = i × i',fn:i=>i*i,expr:'(i × i)',strExpr:i=>`${i}²`},
+{key:'i3',display:'f(i) = i³',fn:i=>i*i*i,expr:'i<sup>3</sup>',strExpr:i=>`${i}³`},
+{key:'over',display:'f(i) = i / i',fn:()=>1,expr:'(i / i)',strExpr:i=>`(${i}/${i})`},
+{key:'fact',display:'f(i) = i!',fn:i=>factorial(i),expr:'(i!)',strExpr:i=>`${i}!`},
+{key:'factplus_i',display:'f(i) = i! + i',fn:i=>factorial(i)+i,expr:'(i! + i)',strExpr:i=>`(${i}!+${i})`},
+{key:'facttimes_i',display:'f(i) = i! × i',fn:i=>factorial(i)*i,expr:'(i! × i)',strExpr:i=>`(${i}!×${i})`},
+{key:'factdiv',display:'f(i) = i!/i',fn:i=>factorial(i)/i,expr:'(i! / i)',strExpr:i=>`(${i}!/${i})`},
+{key:'factminus_i',display:'f(i) = i! − i',fn:i=>factorial(i)-i,expr:'(i! − i)',strExpr:i=>`(${i}!−${i})`},
+{key:'factplusfact',display:'f(i) = i! + i!',fn:i=>factorial(i)+factorial(i),expr:'(i! + i!)',strExpr:i=>`(${i}!+${i}!)`},
+{key:'facttimesfact',display:'f(i) = i! × i!',fn:i=>factorial(i)*factorial(i),expr:'(i! × i!)',strExpr:i=>`(${i}!×${i}!)`},
+{key:'sumfact',display:'f(i) = (i + i)!',fn:i=>factorial(2*i),expr:'(i + i)!',strExpr:i=>`(${i}+${i})!`},
+{key:'ipow_i',display:'f(i) = i^i',fn:i=>Math.pow(i,i),expr:'i<sup>i</sup>',strExpr:i=>`${i}^${i}`},
+{key:'ipow_fact',display:'f(i) = i^(i!)',fn:i=>Math.pow(i,factorial(i)),expr:'i<sup>i!</sup>',strExpr:i=>`${i}^(${i}!)`},
+{key:'factpow_fact',display:'f(i) = (i!)^(i!)',fn:i=>Math.pow(factorial(i),factorial(i)),expr:'(i!)<sup>i!</sup>',strExpr:i=>`(${i}!)^(${i}!)`},
+{key:'im1',display:'f(i) = i − 1',fn:i=>i-1,expr:'(i − 1)',strExpr:i=>`(${i}−1)`},
+{key:'factfact',display:'f(i) = (i!)!',fn:i=>factorial(factorial(i)),expr:'(i!)!',strExpr:i=>`(${i}!)!`},
+{key:'factfact_plus_i',display:'f(i) = (i!)! + i',fn:i=>factorial(factorial(i))+i,expr:'((i!)! + i)',strExpr:i=>`(${i}!)!+${i}`},
+{key:'factfact_minus_i',display:'f(i) = (i!)! − i',fn:i=>factorial(factorial(i))-i,expr:'((i!)! − i)',strExpr:i=>`(${i}!)!−${i}`},
+{key:'factminusfact',display:'f(i) = (i! − i)!',fn:i=>factorial(factorial(i)-i),expr:'(i! − i)!',strExpr:i=>`(${i}!−${i})!`},
+{key:'exp_2',display:'f(i) = 2^i',fn:i=>Math.pow(2,i),expr:'2<sup>i</sup>',strExpr:i=>`2^${i}`},
+{key:'exp_3',display:'f(i) = 3^i',fn:i=>Math.pow(3,i),expr:'3<sup>i</sup>',strExpr:i=>`3^${i}`},
+{key:'exp_4',display:'f(i) = 4^i',fn:i=>Math.pow(4,i),expr:'4<sup>i</sup>',strExpr:i=>`4^${i}`},
+{key:'exp_5',display:'f(i) = 5^i',fn:i=>Math.pow(5,i),expr:'5<sup>i</sup>',strExpr:i=>`5^${i}`},
+{key:'exp_6',display:'f(i) = 6^i',fn:i=>Math.pow(6,i),expr:'6<sup>i</sup>',strExpr:i=>`6^${i}`},
+{key:'exp_7',display:'f(i) = 7^i',fn:i=>Math.pow(7,i),expr:'7<sup>i</sup>',strExpr:i=>`7^${i}`},
+{key:'exp_8',display:'f(i) = 8^i',fn:i=>Math.pow(8,i),expr:'8<sup>i</sup>',strExpr:i=>`8^${i}`},
+{key:'exp_9',display:'f(i) = 9^i',fn:i=>Math.pow(9,i),expr:'9<sup>i</sup>',strExpr:i=>`9^${i}`},
+{key:'exp_10',display:'f(i) = 10^i',fn:i=>Math.pow(10,i),expr:'10<sup>i</sup>',strExpr:i=>`10^${i}`}
 ];
 let selectedKey='i';
 const TRIVIA={i:'Σi = n(n+1) / 2','2i':'Σ(i+i) = n(n+1)',i2:'Σi² = n(n+1)(2n+1) / 6',i3:'Σi³ = [ n(n+1)/2 ]²',over:'Σ(i/i) = n',im1:'Σ(i−1) = n(n−1) / 2',fact:'ไม่มีสูตรปิด (closed form) — ต้องบวกทีละพจน์'};
 const NO_FORMULA_MSG='ไม่มีสูตรปิด (closed form) — ต้องบวกทีละพจน์';
 function getTrivia(key){if(TRIVIA[key])return TRIVIA[key];if(key.startsWith('exp_')){const a=key.split('_')[1];return `Σ${a}ⁱ = (${a}ᵐ − ${a}⁽ⁿ⁺¹⁾) / (1 − ${a})`}return NO_FORMULA_MSG}
 function computeTable(formula){let cum=0,n=0;const pfx=[0];let hitCap=false;while(n<MAX_N){const val=formula.fn(n+1);if(!Number.isFinite(val)||cum+val>MAX_LIMIT)break;cum+=val;n++;pfx.push(cum)}if(n>=MAX_N)hitCap=true;return{N:n,prefix:pfx,capped:hitCap}}
+
+// Modal Script (เพิ่มเงื่อนไข f(i) ในส่วนขอบเขต)
+const stepModal = document.getElementById('stepModal');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+function openModal(k, n, fnObj, totalVal) {
+  document.getElementById('modalK').textContent = k;
+  document.getElementById('modalN').textContent = n;
+  
+  // แสดงเงื่อนไขสูตรต่อท้ายขอบเขต
+  const condText = fnObj.display ? ` (เงื่อนไข: ${fnObj.display})` : (fnObj.rawExpr ? ` (เงื่อนไข: f(i) = ${fnObj.rawExpr})` : '');
+  document.getElementById('modalCond').textContent = condText;
+  
+  document.getElementById('modalResult').textContent = `Σ = ${totalVal.toLocaleString()}`;
+  
+  let exprTerms = [];
+  let valTerms = [];
+  
+  for(let i=k; i<=n; i++) {
+    exprTerms.push(fnObj.strExpr ? fnObj.strExpr(i) : `f(${i})`);
+    valTerms.push(fnObj.fn(i).toLocaleString());
+  }
+
+  const container = document.getElementById('modalStepsContainer');
+  container.innerHTML = `
+    <div class="step-line"><span class="step-label">ขั้นที่ 1 (แทนค่าพจน์):</span><br/>${exprTerms.join(' + ')}</div>
+    <div class="step-line"><span class="step-label">ขั้นที่ 2 (คำนวณแต่ละพจน์):</span><br/>${valTerms.join(' + ')}</div>
+    <div class="step-line"><span class="step-label">ขั้นที่ 3 (ผลรวม):</span><br/><b>= ${totalVal.toLocaleString()}</b></div>
+  `;
+  stepModal.classList.add('active');
+}
+modalCloseBtn.addEventListener('click', () => stepModal.classList.remove('active'));
+stepModal.addEventListener('click', (e) => { if(e.target === stepModal) stepModal.classList.remove('active'); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') stepModal.classList.remove('active'); });
+
+// ระบบ Hover & Click Effect
+function attachTableInteractions(table, getFnObj){
+  table.addEventListener('mouseover', e => {
+    const td = e.target.closest('td');
+    if(!td || td.classList.contains('empty')) return;
+    td.classList.add('highlight-cell');
+  });
+  
+  table.addEventListener('mouseout', e => {
+    const td = e.target.closest('td');
+    if(!td) return;
+    td.classList.remove('highlight-cell');
+  });
+
+  table.addEventListener('click', e => {
+    const td = e.target.closest('td');
+    if(!td || td.classList.contains('empty')) return;
+    const r = parseInt(td.dataset.r, 10);
+    const c = parseInt(td.dataset.c, 10);
+    const totalVal = parseInt(td.dataset.val, 10);
+    const k = r + 1; 
+    const n = c;
+    openModal(k, n, getFnObj(), totalVal);
+  });
+}
+
 function renderFormulaGrid(){const container=document.getElementById('formulaGrid');container.innerHTML='';FORMULAS.forEach(f=>{const btn=document.createElement('button');btn.className='formula-btn'+(f.key===selectedKey?' active':'');btn.innerHTML=`<span class="glyph"><span class="glyph-stack"><span class="glyph-n">n</span><span class="glyph-sigma">Σ</span><span class="glyph-k">i=k</span></span><span class="glyph-expr">${f.expr}</span></span>`;btn.addEventListener('click',()=>{selectedKey=f.key;renderAll()});container.appendChild(btn)})}
-function renderAll(){const formula=FORMULAS.find(f=>f.key===selectedKey);const{N,prefix,capped}=computeTable(formula);const maxSum=prefix[N];document.getElementById('formulaCode').textContent=formula.display;document.getElementById('triviaFormula').textContent=getTrivia(formula.key);document.getElementById('metaLine').innerHTML=`i = 1 ถึง ${N} &nbsp;|&nbsp; ผลรวมสูงสุด (มุมขวาบน) = ${maxSum.toLocaleString()}${capped?` &nbsp;·&nbsp; *จำกัดขนาดตารางไว้ที่ ${MAX_N} แถว/คอลัมน์ เพื่อความลื่นไหล`:''}`;const table=document.getElementById('sigmaTable');table.innerHTML='';const thead=document.createElement('thead');const headRow=document.createElement('tr');const corner=document.createElement('th');corner.className='corner';headRow.appendChild(corner);for(let c=1;c<=N;c++){const th=document.createElement('th');th.textContent=c;headRow.appendChild(th)}thead.appendChild(headRow);table.appendChild(thead);const tbody=document.createElement('tbody');for(let r=1;r<=N;r++){const row=document.createElement('tr');const rowHead=document.createElement('th');rowHead.textContent=r;row.appendChild(rowHead);for(let c=1;c<=N;c++){const td=document.createElement('td');if(c<=r){td.textContent='–';td.className='empty'}else{const val=prefix[c]-prefix[r-1];td.textContent=val.toLocaleString();if(c===r+1)td.className='super'}row.appendChild(td)}tbody.appendChild(row)}table.appendChild(tbody);renderFormulaGrid()}
+function renderAll(){const formula=FORMULAS.find(f=>f.key===selectedKey);const{N,prefix,capped}=computeTable(formula);const maxSum=prefix[N];document.getElementById('formulaCode').textContent=formula.display;document.getElementById('triviaFormula').textContent=getTrivia(formula.key);document.getElementById('metaLine').innerHTML=`i = 1 ถึง ${N} &nbsp;|&nbsp; ผลรวมสูงสุด (มุมขวาบน) = ${maxSum.toLocaleString()}${capped?` &nbsp;·&nbsp; *จำกัดขนาดตารางไว้ที่ ${MAX_N} แถว/คอลัมน์ เพื่อความลื่นไหล`:''}`;const table=document.getElementById('sigmaTable');table.innerHTML='';const thead=document.createElement('thead');const headRow=document.createElement('tr');const corner=document.createElement('th');corner.className='corner';headRow.appendChild(corner);for(let c=1;c<=N;c++){const th=document.createElement('th');th.textContent=c;headRow.appendChild(th)}thead.appendChild(headRow);table.appendChild(thead);const tbody=document.createElement('tbody');for(let r=1;r<=N;r++){const row=document.createElement('tr');const rowHead=document.createElement('th');rowHead.textContent=r;row.appendChild(rowHead);for(let c=1;c<=N;c++){const td=document.createElement('td');if(c<=r){td.textContent='–';td.className='empty'}else{const val=prefix[c]-prefix[r-1];td.textContent=val.toLocaleString();td.dataset.r=r-1;td.dataset.c=c;td.dataset.val=val;if(c===r+1)td.className='super'}row.appendChild(td)}tbody.appendChild(row)}table.appendChild(tbody);attachTableInteractions(table, () => formula);renderFormulaGrid()}
 renderAll();
 
 let geoA=2,customA='';
 function computeGeoTable(a){let nMax=0;while(nMax<MAX_N){const val=Math.pow(a,nMax+1);if(!Number.isFinite(val)||val>MAX_LIMIT)break;nMax++}if(nMax<1)nMax=1;const prefix=[0];for(let k=1;k<=nMax;k++)prefix.push(prefix[k-1]+Math.pow(a,k));return{nMax,prefix}}
 function renderASelector(){const container=document.getElementById('aSelector');container.innerHTML='';[2,3,4,5,6,7,8,9,10].forEach(a=>{const btn=document.createElement('button');btn.className='a-btn'+(a===geoA?' active':'');btn.textContent=`a = ${a}`;btn.addEventListener('click',()=>{geoA=a;customA='';renderGeo()});container.appendChild(btn)});const wrap=document.createElement('span');wrap.className='a-custom';wrap.innerHTML=`<input type="number" min="2" placeholder="กำหนดเอง" id="customAInput" value="${customA}" /><button id="applyCustomA">ใช้ a นี้</button>`;container.appendChild(wrap);document.getElementById('customAInput').addEventListener('input',e=>customA=e.target.value);document.getElementById('applyCustomA').addEventListener('click',()=>{const val=parseInt(customA,10);if(Number.isInteger(val)&&val>=2){geoA=val;renderGeo()}})}
-function renderGeo(){const{nMax,prefix}=computeGeoTable(geoA);document.getElementById('geoMeta').textContent=`a = ${geoA}  (m: 1–${nMax}, n: 1–${nMax})`;const table=document.getElementById('geoTable');table.innerHTML='';const thead=document.createElement('thead');const headRow=document.createElement('tr');const corner=document.createElement('th');corner.className='corner';corner.textContent='m';headRow.appendChild(corner);for(let n=1;n<=nMax;n++){const th=document.createElement('th');th.textContent=n;headRow.appendChild(th)}thead.appendChild(headRow);table.appendChild(thead);const tbody=document.createElement('tbody');for(let m=1;m<=nMax;m++){const row=document.createElement('tr');const rowHead=document.createElement('th');rowHead.textContent=m;row.appendChild(rowHead);for(let n=1;n<=nMax;n++){const td=document.createElement('td');if(n>=m){const val=prefix[n]-prefix[m-1];td.textContent=val.toLocaleString()}row.appendChild(td)}tbody.appendChild(row)}table.appendChild(tbody);renderASelector()}
+function renderGeo(){const{nMax,prefix}=computeGeoTable(geoA);document.getElementById('geoMeta').textContent=`a = ${geoA}  (m: 1–${nMax}, n: 1–${nMax})`;const table=document.getElementById('geoTable');table.innerHTML='';const thead=document.createElement('thead');const headRow=document.createElement('tr');const corner=document.createElement('th');corner.className='corner';corner.textContent='m';headRow.appendChild(corner);for(let n=1;n<=nMax;n++){const th=document.createElement('th');th.textContent=n;headRow.appendChild(th)}thead.appendChild(headRow);table.appendChild(thead);const tbody=document.createElement('tbody');for(let m=1;m<=nMax;m++){const row=document.createElement('tr');const rowHead=document.createElement('th');rowHead.textContent=m;row.appendChild(rowHead);for(let n=1;n<=nMax;n++){const td=document.createElement('td');if(n>=m){const val=prefix[n]-prefix[m-1];td.textContent=val.toLocaleString();td.dataset.r=m-1;td.dataset.c=n;td.dataset.val=val}else{td.textContent='–';td.className='empty'}row.appendChild(td)}tbody.appendChild(row)}table.appendChild(tbody);attachTableInteractions(table, () => ({ fn: i => Math.pow(geoA, i), strExpr: i => `${geoA}^${i}`, display: `f(i) = ${geoA}ⁿ` }));renderASelector()}
 renderGeo();
 
-// ===== Tabs =====
+// ===== Tabs Switching =====
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById(btn.dataset.tab==='table'?'tabTable':'tabFinder').classList.add('active');
+    const tabName = btn.dataset.tab;
+    if(tabName==='table') document.getElementById('tabTable').classList.add('active');
+    else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
+    else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
+    else if(tabName==='credit') document.getElementById('tabCredit').classList.add('active');
   });
 });
 
 // ===== Sigma Finder =====
-const FINDER_CARD_CAP = 40;       // จกัดจำนวนการ์ดคำตอบที่แสดง (กันจอรก)
-const MATCHES_PER_FORMULA_CAP = 5; // ต่อ 1 สูตร แสดงคำตอบไม่เกินกี่คู (k,n)
+const FINDER_CARD_CAP = 40;       
+const MATCHES_PER_FORMULA_CAP = 5; 
 
 (function populateFinderFormulaSelect(){
   const sel = document.getElementById('finderFormula');
@@ -241,10 +401,6 @@ const MATCHES_PER_FORMULA_CAP = 5; // ต่อ 1 สูตร แสดงค�
   });
 })();
 
-// ดึงข้อมูลจาก computeTable() ตัวเดียวกับที่ใช้เรนเดอร์ Sigma Table โดยตรง
-// เพื่อให้คำตอบของ Finder ตรงกับค่าที่แสดงในตารางเสมอ
-// วนครบทุกสูตรในรายการเสมอ (ไม่มี early-return) และคืนผลของ "ทุกสูตร"
-// ไม่ว่าจะพบคำตอบหรือไม่ก็ตาม เพื่อให้ตรวจสอบย้อนหลังได้ว่าครบ 30 สูตรจริง
 function searchSigma(target, formulaKey){
   const list = formulaKey==='all' ? FORMULAS : FORMULAS.filter(f=>f.key===formulaKey);
   return list.map(formula=>{
@@ -264,12 +420,10 @@ function searchSigma(target, formulaKey){
 function renderFinderResults(entries, target){
   const container=document.getElementById('finderResults');
   container.innerHTML='';
-
   const matchedEntries = entries.filter(e=>e.matches.length>0);
   const unmatchedEntries = entries.filter(e=>e.matches.length===0);
   const targetDisplay = target.toLocaleString();
 
-  // สรุปให้เห็นชัดว่าตรวจครบกี่สูตร พบกี่สูตร
   const summary=document.createElement('div');
   summary.className='finder-meta sigma-num';
   summary.style.marginBottom='14px';
@@ -279,7 +433,7 @@ function renderFinderResults(entries, target){
   if(matchedEntries.length===0){
     const empty=document.createElement('div');
     empty.className='finder-empty';
-    empty.textContent='ไม่พบคำตอบสำหรับผลรวมนี้ในสูตรที่ตรวจสอบ ลองเปลี่ยนค่าหรือเปลี่ยนสูตรดูครบ';
+    empty.textContent='ไม่พบคำตอบสำหรับผลรวมนี้ในสูตรที่ตรวจสอบ ลองเปลี่ยนค่าหรือเปลี่ยนสูตรดูครับ';
     container.appendChild(empty);
   }else{
     let cardCount=0;
@@ -314,7 +468,6 @@ function renderFinderResults(entries, target){
     }
   }
 
-  // แสดงรายชื่อสูตรที่ตรวจแล้วแต่ไม่พบคำตอบ เพื่อยืนยันว่าครบทุกสูตรจริง
   if(unmatchedEntries.length>0){
     const list=document.createElement('div');
     list.className='finder-conditions';
@@ -342,6 +495,86 @@ function runFinderSearch(){
 
 document.getElementById('finderSearchBtn').addEventListener('click',runFinderSearch);
 document.getElementById('finderTarget').addEventListener('keydown',e=>{if(e.key==='Enter')runFinderSearch()});
+
+// ===== Custom Formula =====
+let currentCustomObj = { fn: i => 2*i + 1, strExpr: i => `(2×${i}+1)`, rawExpr: '2*i + 1' };
+
+function parseCustomFormula(exprStr){
+  return function(i){
+    try {
+      let sanitized = exprStr.replace(/\^/g, '**').replace(/i/g, `(${i})`);
+      return Function(`"use strict"; return (${sanitized})`)();
+    } catch(e) {
+      return NaN;
+    }
+  }
+}
+
+function renderCustomSigmaTable(){
+  const exprStr = document.getElementById('customFormulaInput').value.trim();
+  const customFn = parseCustomFormula(exprStr);
+  currentCustomObj = { 
+    fn: customFn, 
+    strExpr: i => exprStr.replace(/i/g, `${i}`),
+    rawExpr: exprStr
+  };
+  
+  const { N, prefix, capped } = computeTable({ fn: customFn, expr: exprStr });
+  const table = document.getElementById('customSigmaTable');
+  table.innerHTML = '';
+  
+  document.getElementById('customResultTitle').textContent = `ตารางผลรวมสูตร: f(i) = ${exprStr}`;
+  document.getElementById('customMetaLine').innerHTML = `i = 1 ถึง ${N} | ผลรวมสูงสุด = ${(prefix[N]||0).toLocaleString()}${capped ? ' · *จำกัดขนาดตารางเพื่อความลื่นไหล' : ''}`;
+  
+  if(N === 0) {
+    table.innerHTML = '<tbody><tr><td style="width:auto;padding:20px;">สูตรไม่ถูกต้อง หรือได้ค่าที่เกินขีดจำกัด</td></tr></tbody>';
+    return;
+  }
+
+  const thead = document.createElement('thead');
+  const headRow = document.createElement('tr');
+  const corner = document.createElement('th');
+  corner.className = 'corner';
+  headRow.appendChild(corner);
+  for(let c=1; c<=N; c++){
+    const th = document.createElement('th');
+    th.textContent = c;
+    headRow.appendChild(th);
+  }
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  for(let r=1; r<=N; r++){
+    const row = document.createElement('tr');
+    const rowHead = document.createElement('th');
+    rowHead.textContent = r;
+    row.appendChild(rowHead);
+    for(let c=1; c<=N; c++){
+      const td = document.createElement('td');
+      if(c <= r){
+        td.textContent = '–';
+        td.className = 'empty';
+      }else{
+        const val = prefix[c] - prefix[r-1];
+        td.textContent = val.toLocaleString();
+        td.dataset.r = r-1;
+        td.dataset.c = c;
+        td.dataset.val = val;
+        if(c===r+1) td.className = 'super';
+      }
+      row.appendChild(td);
+    }
+    tbody.appendChild(row);
+  }
+  table.appendChild(tbody);
+  attachTableInteractions(table, () => currentCustomObj);
+}
+
+document.getElementById('buildCustomTableBtn').addEventListener('click', renderCustomSigmaTable);
+document.getElementById('customFormulaInput').addEventListener('keydown', e => { if(e.key==='Enter') renderCustomSigmaTable(); });
+
+renderCustomSigmaTable();
 </script>
 </body>
 </html>
