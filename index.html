@@ -91,14 +91,6 @@
   .finder-label{font-size:13px;color:var(--sub-text);margin-bottom:6px;display:block}
   .finder-input,.finder-select{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border-color);background:var(--card-bg);color:var(--text-color);font-family:'Varela Round',sans-serif;font-size:15px;margin-bottom:16px;max-width:100%;}
   
-  /* แก้ไขไอคอนเลือกวันที่/เวลาเพื่อไม่ให้ดันเส้นขอบล้น */
-  input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="time"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    margin-right: 0;
-    padding: 0;
-  }
-
   .finder-btn{width:100%;box-sizing:border-box;padding:12px;border-radius:8px;border:none;background:var(--text-color);color:var(--card-bg);font-family:'Mali',cursive;font-weight:700;font-size:16px;cursor:pointer;margin-bottom:16px}
   .finder-btn:hover{opacity:0.9}
   .finder-conditions{background:var(--highlight-bg);border-radius:8px;padding:12px 14px;font-size:12.5px;line-height:1.9;color:var(--sub-text)}
@@ -117,7 +109,7 @@
   .finder-meta b{color:var(--text-color)}
   .finder-empty{color:var(--sub-text);font-size:14px;padding:20px;text-align:center}
 
-  .guide-card, .credit-card {
+  .guide-card {
     max-width: 650px;
     margin: 20px auto;
     padding: 30px;
@@ -126,7 +118,7 @@
     border-radius: 16px;
     box-shadow: 0 4px 12px var(--shadow-color);
   }
-  .guide-title, .credit-title {
+  .guide-title {
     font-size: 22px;
     font-weight: 700;
     margin: 0 0 20px 0;
@@ -218,40 +210,6 @@
     font-size: 42px; font-weight: bold; color: #E67E22; margin: 15px 0;
     background: var(--bg-color); border: 2px dashed #E67E22; border-radius: 12px; padding: 15px;
   }
-
-  .task-item {
-    background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 10px;
-    padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center;
-    justify-content: space-between; gap: 12px; transition: all 0.2s ease;
-  }
-  .task-item.completed { opacity: 0.6; background: var(--highlight-bg); text-decoration: line-through; }
-  .task-info { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
-  .task-title { font-weight: 700; font-size: 15px; color: var(--text-color); }
-  .task-meta { font-size: 12px; color: var(--sub-text); font-family: 'Varela Round', sans-serif; }
-  .task-tag {
-    display: inline-block; padding: 2px 8px; border-radius: 999px;
-    font-size: 11px; font-weight: bold; width: fit-content;
-  }
-  .tag-high { background: #FDE8E8; color: #C0392B; }
-  .tag-med { background: #FEF9E7; color: #D68910; }
-  .tag-low { background: #EAF4EC; color: #2F855A; }
-  .btn-done {
-    background: var(--accent-green); color: #fff; border: none; padding: 6px 14px;
-    border-radius: 6px; font-family: 'Mali', cursive; font-size: 13px;
-    font-weight: bold; cursor: pointer; transition: background 0.15s ease;
-  }
-  .btn-done:hover { opacity: 0.9; }
-  .btn-del {
-    background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red);
-    padding: 5px 10px; border-radius: 6px; font-family: 'Mali', cursive;
-    font-size: 12px; cursor: pointer;
-  }
-  .btn-del:hover { background: var(--accent-red); color: #fff; }
-  .notify-task-card {
-    background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px;
-    padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between;
-    align-items: center; gap: 10px;
-  }
 </style>
 </head>
 <body>
@@ -262,7 +220,6 @@
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
   <button class="tab-btn" data-tab="customTools">Custom Formula</button>
   <button class="tab-btn" data-tab="flashcard">ฝึกฝน/แบบฝึกหัด</button>
-  <button class="tab-btn" data-tab="planner">Planner</button>
   <button class="tab-btn" data-tab="streak">Streak & บัญชี</button>
   <button class="tab-btn" data-tab="guide">คู่มือการใช้งาน</button>
   <button class="tab-btn" data-tab="settings">Setting</button>
@@ -384,39 +341,7 @@
   </div>
 </div>
 
-<!-- Tab 5: Planner & Daily Tasks -->
-<div id="tabPlanner" class="tab-panel">
-  <div class="finder-layout">
-    <div class="finder-panel">
-      <h3 class="sigma-serif">➕ เพิ่มแผนงาน</h3>
-      <label class="finder-label">ชื่อกิจกรรมหรือการบ้าน</label>
-      <input type="text" id="plannerTaskTitle" class="finder-input" placeholder="เช่น ทำแบบฝึกหัด Sigma ข้อ 1-5" />
-
-      <label class="finder-label">วันที่ต้องทำ</label>
-      <input type="date" id="plannerTaskDate" class="finder-input" />
-
-      <label class="finder-label">เวลา (ไม่บังคับ)</label>
-      <input type="time" id="plannerTaskTime" class="finder-input" />
-
-      <label class="finder-label">ความสำคัญ</label>
-      <select id="plannerTaskPriority" class="finder-select">
-        <option value="med">ปานกลาง 🟡</option>
-        <option value="high">สำคัญมาก 🔴</option>
-        <option value="low">ทั่วไป 🟢</option>
-      </select>
-
-      <button id="addPlannerTaskBtn" class="finder-btn">บันทึกแผนงาน</button>
-    </div>
-
-    <div class="finder-panel">
-      <h3 class="sigma-serif">📋 รายการงานทั้งหมด</h3>
-      <div id="plannerTaskList" style="display:flex; flex-direction:column; gap:10px;">
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Tab 6: Streak & User Account -->
+<!-- Tab 5: Streak & User Account -->
 <div id="tabStreak" class="tab-panel">
   <div class="streak-card">
     <div id="streakLoginBox">
@@ -438,7 +363,7 @@
   </div>
 </div>
 
-<!-- Tab 7: Guide -->
+<!-- Tab 6: Guide -->
 <div id="tabGuide" class="tab-panel">
   <div class="guide-card">
     <h3 class="guide-title sigma-serif">📖 คู่มือการใช้งานเว็บแอปพลิเคชัน</h3>
@@ -472,14 +397,7 @@
     </div>
 
     <div class="guide-item">
-      <div class="guide-item-title">5. หน้า Planner & การบ้าน (วางแผนประจำวัน)</div>
-      <div class="guide-item-desc">
-        วางแผนสิ่งที่คุณต้องทำประจำวัน เมื่อเปิดหน้าเว็บขึ้นมาระบบจะเด้งป๊อปอัพแจ้งเตือนรายการที่ต้องทำของวันนั้นให้ทันที เมื่อทำเสร็จสามารถกดปุ่ม "เสร็จสิ้น" เพื่อหยุดการแจ้งเตือนได้ค่ะ
-      </div>
-    </div>
-
-    <div class="guide-item">
-      <div class="guide-item-title">6. หน้า Streak & บัญชีผู้ใช้งาน</div>
+      <div class="guide-item-title">5. หน้า Streak & บัญชีผู้ใช้งาน</div>
       <div class="guide-item-desc">
         ตั้งชื่อผู้ใช้เพื่อเริ่มเก็บสตรีคการทำแบบฝึกหัดต่อเนื่อง คุณสามารถเข้ามาทำแบบฝึกหัดกี่รอบก็ได้ในแต่ละวัน โดยไฟสตรีคจะเพิ่มขึ้นวันละ 1 ครั้งเมื่อเข้าทำในแต่ละวันค่ะ
       </div>
@@ -494,7 +412,7 @@
   </div>
 </div>
 
-<!-- Tab 8: Settings -->
+<!-- Tab 7: Settings -->
 <div id="tabSettings" class="tab-panel">
   <div class="guide-card" style="max-width: 500px;">
     <h3 class="guide-title sigma-serif">⚙️ ตั้งค่าระบบ (Settings)</h3>
@@ -530,21 +448,6 @@
       <div id="modalInfo"><b>ขอบเขต:</b> เริ่มจาก i = <span id="modalK"></span> ถึง <span id="modalN"></span> <span id="modalCond" style="color:var(--accent-red); font-weight:bold;"></span></div>
       <div class="modal-eq sigma-num" id="modalResult"></div>
       <div class="modal-steps-container" id="modalStepsContainer"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal เด้งแจ้งเตือนตอนเปิดเว็บ -->
-<div id="notifyModal" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3 class="modal-title sigma-serif">🔔 รายการงานประจำวันนี้!</h3>
-      <button class="modal-close" id="notifyModalCloseBtn">&times;</button>
-    </div>
-    <div class="modal-body">
-      <p style="margin-top:0; color:var(--sub-text); font-size:13.5px;">สิ่งที่คุณต้องทำในวันนี้ อย่าลืมทำแล้วกด "เสร็จสิ้น" นะคะ!</p>
-      <div id="notifyTaskList">
-      </div>
     </div>
   </div>
 </div>
@@ -661,7 +564,6 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
     else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
-    else if(tabName==='planner') document.getElementById('tabPlanner').classList.add('active');
     else if(tabName==='streak') document.getElementById('tabStreak').classList.add('active');
     else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
     else if(tabName==='settings') document.getElementById('tabSettings').classList.add('active');
@@ -997,126 +899,6 @@ document.getElementById('fcRestartBtn').addEventListener('click', () => {
 
 generateFlashcards();
 renderFlashcard();
-
-// ===== Planner & Notification Logic =====
-let plannerTasks = JSON.parse(localStorage.getItem('sigma_planner_tasks')) || [];
-
-document.getElementById('plannerTaskDate').value = new Date().toISOString().split('T')[0];
-
-function savePlannerTasks() {
-  localStorage.setItem('sigma_planner_tasks', JSON.stringify(plannerTasks));
-  renderPlannerTasks();
-}
-
-function renderPlannerTasks() {
-  const container = document.getElementById('plannerTaskList');
-  container.innerHTML = '';
-
-  if (plannerTasks.length === 0) {
-    container.innerHTML = '<div class="finder-empty">ยังไม่มีแผนงาน กรอกฟอร์มทางซ้ายเพื่อเพิ่มงานได้เลยนะคะ</div>';
-    return;
-  }
-
-  plannerTasks.sort((a,b) => a.completed - b.completed);
-
-  plannerTasks.forEach(task => {
-    const item = document.createElement('div');
-    item.className = `task-item ${task.completed ? 'completed' : ''}`;
-
-    let tagClass = 'tag-med', tagLabel = 'ปานกลาง';
-    if(task.priority === 'high') { tagClass = 'tag-high'; tagLabel = 'สำคัญมาก'; }
-    if(task.priority === 'low') { tagClass = 'tag-low'; tagLabel = 'ทั่วไป'; }
-
-    item.innerHTML = `
-      <div class="task-info">
-        <span class="task-tag ${tagClass}">${tagLabel}</span>
-        <div class="task-title">${task.title}</div>
-        <div class="task-meta">📅 ${task.date} ${task.time ? '| ⏰ ' + task.time : ''}</div>
-      </div>
-      <div style="display:flex; gap:6px; align-items:center;">
-        ${!task.completed ? `<button class="btn-done" onclick="toggleTaskDone('${task.id}')">✓ เสร็จสิ้น</button>` : '<span style="color:var(--accent-green); font-size:12px; font-weight:bold;">เสร็จแล้ว</span>'}
-        <button class="btn-del" onclick="deleteTask('${task.id}')">ลบ</button>
-      </div>
-    `;
-    container.appendChild(item);
-  });
-}
-
-document.getElementById('addPlannerTaskBtn').addEventListener('click', () => {
-  const title = document.getElementById('plannerTaskTitle').value.trim();
-  const date = document.getElementById('plannerTaskDate').value;
-  const time = document.getElementById('plannerTaskTime').value;
-  const priority = document.getElementById('plannerTaskPriority').value;
-
-  if (!title || !date) {
-    alert('กรุณากรอกชื่อกิจกรรมและวันที่ด้วยนะคะ');
-    return;
-  }
-
-  const newTask = {
-    id: 'task_' + Date.now(),
-    title,
-    date,
-    time,
-    priority,
-    completed: false
-  };
-
-  plannerTasks.push(newTask);
-  savePlannerTasks();
-
-  document.getElementById('plannerTaskTitle').value = '';
-  document.getElementById('plannerTaskTime').value = '';
-});
-
-function toggleTaskDone(id) {
-  const task = plannerTasks.find(t => t.id === id);
-  if (task) {
-    task.completed = true;
-    savePlannerTasks();
-    checkTodayNotifications();
-  }
-}
-
-function deleteTask(id) {
-  plannerTasks = plannerTasks.filter(t => t.id !== id);
-  savePlannerTasks();
-  checkTodayNotifications();
-}
-
-const notifyModal = document.getElementById('notifyModal');
-document.getElementById('notifyModalCloseBtn').addEventListener('click', () => notifyModal.classList.remove('active'));
-
-function checkTodayNotifications() {
-  const today = new Date().toISOString().split('T')[0];
-  const todayTasks = plannerTasks.filter(t => t.date === today && !t.completed);
-
-  const container = document.getElementById('notifyTaskList');
-  container.innerHTML = '';
-
-  if (todayTasks.length > 0) {
-    todayTasks.forEach(task => {
-      const card = document.createElement('div');
-      card.className = 'notify-task-card';
-      card.innerHTML = `
-        <div>
-          <div style="font-weight:bold; color:var(--text-color); font-size:14.5px;">📌 ${task.title}</div>
-          <div style="font-size:12px; color:var(--sub-text);">⏰ เวลา: ${task.time ? task.time : 'ไม่ระบุ'}</div>
-        </div>
-        <button class="btn-done" onclick="toggleTaskDone('${task.id}')">✓ กดเสร็จสิ้นเพื่อหยุดเตือน</button>
-      `;
-      container.appendChild(card);
-    });
-    notifyModal.classList.add('active');
-  } else {
-    notifyModal.classList.remove('active');
-  }
-}
-
-renderPlannerTasks();
-window.addEventListener('load', () => {
-  setTimeout(checkTodayNotifications, 500);
-});
 
 // ===== Streak & User Account Logic =====
 let currentStreakUser = null;
