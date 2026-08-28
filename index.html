@@ -335,15 +335,23 @@
   <div class="guide-card" style="max-width: 600px;">
     <h3 class="guide-title sigma-serif">แบบฝึกหัดทบทวนความเข้าใจ</h3>
     
-    <!-- ปุ่มเลือกระดับความยาก -->
-    <div class="level-selector">
-      <button class="level-btn active" data-level="easy">ง่าย (30s)</button>
-      <button class="level-btn" data-level="medium">กลาง (45s)</button>
-      <button class="level-btn" data-level="hard">ยาก (60s)</button>
-      <button class="level-btn" data-level="expo">Exponential (60s)</button>
+    <!-- หน้าเลือกเลเวลและกดเริ่มเกม (Start Screen) -->
+    <div id="fcStartScreen" style="text-align:center; padding: 20px 0;">
+      <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">กรุณาเลือกระดับความยากที่ต้องการทดสอบ แล้วกดปุ่มเริ่มเพื่อจับเวลา</p>
+      
+      <!-- ปุ่มเลือกระดับความยาก -->
+      <div class="level-selector">
+        <button class="level-btn active" data-level="easy">ง่าย (30s)</button>
+        <button class="level-btn" data-level="medium">กลาง (45s)</button>
+        <button class="level-btn" data-level="hard">ยาก (60s)</button>
+        <button class="level-btn" data-level="expo">Exponential (60s)</button>
+      </div>
+
+      <button id="fcStartBtn" class="finder-btn" style="max-width:280px; margin:20px auto 0; font-size:18px; padding:14px;">🚀 เริ่มทำแบบฝึกหัด</button>
     </div>
 
-    <div id="flashcardBox" style="background:var(--bg-color); border:2px dashed var(--border-color); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px;">
+    <!-- กล่องทำแบบฝึกหัด (Game Screen) -->
+    <div id="flashcardBox" style="display:none; background:var(--bg-color); border:2px dashed var(--border-color); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <div style="font-size:14px; color:var(--sub-text);" id="fcStepText">ข้อที่ 1/5</div>
         <!-- แสดงเวลาถอยหลัง -->
@@ -431,7 +439,7 @@
     <div class="guide-item">
       <div class="guide-item-title">4. หน้า แบบฝึกหัด (ทบทวนความรู้)</div>
       <div class="guide-item-desc">
-        โหมดฝึกฝนการทำโจทย์แบบ Flashcard เลือกระดับความยาก (ง่าย: 30s, กลาง: 45s, ยาก: 60s, Exponential: 60s) ระบบจะนับถอยหลังการทำโจทย์เมื่อเวลาหมดระบบจะตรวจคำตอบให้อัตโนมัติค่ะ!
+        โหมดฝึกฝนการทำโจทย์แบบ Flashcard เลือกระดับความยาก (ง่าย: 30s, กลาง: 45s, ยาก: 60s, Exponential: 60s) เมื่อพร้อมแล้วกดปุ่ม "เริ่มทำแบบฝึกหัด" ระบบจะเริ่มจับเวลานับถอยหลังในการทำโจทย์ทันที!
       </div>
     </div>
 
@@ -896,18 +904,22 @@ function handleTimeOut() {
   }
 }
 
-// สลับระดับความยาก
+// สลับระดับความยาก (ในหน้า Start Screen)
 document.querySelectorAll('.level-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentLevel = btn.dataset.level;
-    
-    document.getElementById('flashcardBox').style.display = 'block';
-    document.getElementById('fcSummaryBox').style.display = 'none';
-    generateFlashcards();
-    renderFlashcard();
   });
+});
+
+// กดปุ่มเริ่มทำแบบฝึกหัด
+document.getElementById('fcStartBtn').addEventListener('click', () => {
+  document.getElementById('fcStartScreen').style.display = 'none';
+  document.getElementById('flashcardBox').style.display = 'block';
+  document.getElementById('fcSummaryBox').style.display = 'none';
+  generateFlashcards();
+  renderFlashcard();
 });
 
 function generateFlashcards() {
@@ -1038,14 +1050,10 @@ function showFcSummary() {
 }
 
 document.getElementById('fcRestartBtn').addEventListener('click', () => {
-  document.getElementById('flashcardBox').style.display = 'block';
+  document.getElementById('fcStartScreen').style.display = 'block';
+  document.getElementById('flashcardBox').style.display = 'none';
   document.getElementById('fcSummaryBox').style.display = 'none';
-  generateFlashcards();
-  renderFlashcard();
 });
-
-generateFlashcards();
-renderFlashcard();
 
 // ===== Streak & User Account Logic =====
 let currentStreakUser = null;
