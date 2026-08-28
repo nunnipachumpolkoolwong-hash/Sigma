@@ -203,7 +203,7 @@
 
   .streak-card {
     background: var(--card-bg); border: 2px solid var(--text-color); border-radius: 16px;
-    padding: 24px; max-width: 450px; margin: 20px auto; text-align: center;
+    padding: 24px; width: 100%; text-align: center;
     box-shadow: 0 4px 12px var(--shadow-color);
   }
   .streak-count-box {
@@ -215,6 +215,11 @@
   .level-selector { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
   .level-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-family: 'Mali', cursive; font-size: 14px; cursor: pointer; transition: all 0.2s; }
   .level-btn.active { background: var(--text-color); color: var(--card-bg); border-color: var(--text-color); font-weight: bold; }
+
+  /* Mode Switcher UI */
+  .mode-selector { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+  .mode-btn { padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--card-bg); color: var(--sub-text); font-family: 'Mali', cursive; font-size: 13.5px; cursor: pointer; font-weight: 600; }
+  .mode-btn.active { border-color: var(--accent-red); color: var(--accent-red); background: var(--highlight-bg); }
 
   /* Timer UI Styles */
   .timer-box {
@@ -231,6 +236,19 @@
     height: 100%; background: var(--accent-red); width: 100%;
     transition: width 1s linear;
   }
+
+  /* Mistake Bank Items */
+  .mistake-item {
+    background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .mistake-eq { font-size: 18px; font-weight: bold; color: var(--text-color); }
+
+  /* Auth UI Addition */
+  .auth-divider { margin: 16px 0; border-top: 1px dashed var(--border-color); position: relative; text-align: center; }
+  .auth-divider span { background: var(--card-bg); padding: 0 10px; position: relative; top: -10px; font-size: 12px; color: var(--sub-text); }
+  .google-btn { background: #4285F4; color: white; border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+  .google-btn:hover { background: #357ae8; }
 </style>
 </head>
 <body>
@@ -241,15 +259,14 @@
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
   <button class="tab-btn" data-tab="customTools">Custom Formula</button>
   <button class="tab-btn" data-tab="flashcard">ฝึกฝน/แบบฝึกหัด</button>
-  <button class="tab-btn" data-tab="streak">Streak & บัญชี</button>
+  <button class="tab-btn" data-tab="mistakes">คลังข้อผิด 📕</button>
   <button class="tab-btn" data-tab="guide">คู่มือการใช้งาน</button>
-  <button class="tab-btn" data-tab="settings">Setting</button>
+  <button class="tab-btn" data-tab="settings">Setting/streak</button>
 </div>
 
-<!-- Tab 1: Sigma Table -->
 <div id="tabTable" class="tab-panel active">
 <h1 class="sigma-serif">ตาราง Sigma — ผลรวมถึง 1000</h1>
-<p class="subtitle">เซลล์ (แถว r, คอลัมน์ c) = ผลรวมของ f(i) ตั้งแต่ i = r ถึง i = c &nbsp;|&nbsp; คลิกที่เซลล์เพื่อดูวิธีทำแบบละเอียด</p>
+<p class="subtitle">เซลล์ (แถว r, คอลัมน์ c) = ผลรวมของ f(i) ตั้งแต่ i = r ถึง i = c &nbsp;|&nbsp; คลิกที่เซลล์เพื่อดูวิธีทำแบบรายละเอียด</p>
 <div class="intro-card"><b>ซิกม่า (Σ)</b> คือสัญลักษณ์แทนการบวกเลขต่อเนื่องหลายๆ พจน์ในบรรทัดเดียว แทนที่จะเขียน 1+2+3+...+100 ยาวๆ ก็เขียนสั้นๆ เป็น "ผลรวมของ i ตั้งแต่ i=1 ถึง 100" ได้เลย ตัวเลขข้างบน Σ (คือ n) บอกว่าจะบวกไปถึงไหน ส่วนข้างล่าง (i=k) บอกว่าเริ่มบวกจากตรงไหน</div>
 <div id="formulaGrid" class="formula-grid"></div>
 <div class="formula-line"><span class="lbl">สูตร:</span><span id="formulaCode" class="formula-code sigma-num"></span></div>
@@ -273,7 +290,6 @@
 </div>
 </div>
 
-<!-- Tab 2: Sigma Finder -->
 <div id="tabFinder" class="tab-panel">
 <div class="finder-layout">
   <div class="finder-panel">
@@ -305,7 +321,6 @@
 </div>
 </div>
 
-<!-- Tab 3: Custom Formula -->
 <div id="tabCustomTools" class="tab-panel">
   <div class="finder-layout">
     <div class="finder-panel">
@@ -330,16 +345,18 @@
   </div>
 </div>
 
-<!-- Tab 4: Flashcard & Training -->
 <div id="tabFlashcard" class="tab-panel">
   <div class="guide-card" style="max-width: 600px;">
     <h3 class="guide-title sigma-serif">แบบฝึกหัดทบทวนความเข้าใจ</h3>
     
-    <!-- หน้าเลือกเลเวลและกดเริ่มเกม (Start Screen) -->
-    <div id="fcStartScreen" style="text-align:center; padding: 20px 0;">
+    <div class="mode-selector">
+      <button class="mode-btn active" id="modeStandardBtn">🎯 โหมดมาตรฐาน (5 ข้อ)</button>
+      <button class="mode-btn" id="modeUnlimitedBtn">♾️ ซ้อมมือไม่จำกัด (Unlimited)</button>
+    </div>
+
+    <div id="fcStartScreen" style="text-align:center; padding: 10px 0;">
       <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">กรุณาเลือกระดับความยากที่ต้องการทดสอบ แล้วกดปุ่มเริ่มเพื่อจับเวลา</p>
       
-      <!-- ปุ่มเลือกระดับความยาก -->
       <div class="level-selector">
         <button class="level-btn active" data-level="easy">ง่าย (30s)</button>
         <button class="level-btn" data-level="medium">กลาง (45s)</button>
@@ -350,15 +367,12 @@
       <button id="fcStartBtn" class="finder-btn" style="max-width:280px; margin:20px auto 0; font-size:18px; padding:14px;">🚀 เริ่มทำแบบฝึกหัด</button>
     </div>
 
-    <!-- กล่องทำแบบฝึกหัด (Game Screen) -->
     <div id="flashcardBox" style="display:none; background:var(--bg-color); border:2px dashed var(--border-color); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <div style="font-size:14px; color:var(--sub-text);" id="fcStepText">ข้อที่ 1/5</div>
-        <!-- แสดงเวลาถอยหลัง -->
         <div class="timer-box">⏱️ เหลือเวลา: <span id="fcTimerSeconds">30</span>s</div>
       </div>
 
-      <!-- แถบพลังงานเวลา -->
       <div class="timer-progress-bar">
         <div id="fcTimerFill" class="timer-progress-fill"></div>
       </div>
@@ -388,29 +402,18 @@
   </div>
 </div>
 
-<!-- Tab 5: Streak & User Account -->
-<div id="tabStreak" class="tab-panel">
-  <div class="streak-card">
-    <div id="streakLoginBox">
-      <h3 class="sigma-serif" style="font-size:22px; color:var(--text-color); margin-bottom:12px;">👤 บัญชีผู้ใช้งาน</h3>
-      <p style="font-size:13.5px; color:var(--sub-text); margin-bottom:16px;">ระบุชื่อเพื่อบันทึกและสะสมไฟสตรีคการทำแบบฝึกหัด</p>
-      <input type="text" id="streakUsername" class="finder-input" placeholder="พิมพ์ชื่อผู้ใช้..." style="text-align:center;" />
-      <button id="streakLoginBtn" class="finder-btn" style="margin-bottom:0;">เข้าสู่ระบบ / บันทึกชื่อ</button>
-    </div>
+<div id="tabMistakes" class="tab-panel">
+  <div class="guide-card" style="max-width: 650px;">
+    <h3 class="guide-title sigma-serif">📕 คลังข้อที่เคยตอบผิด (Mistake Bank)</h3>
+    <p style="font-size:13.5px; color:var(--sub-text); margin-bottom:20px;">รวบรวมโจทย์ที่คุณเคยตอบผิดไว้ให้กลับมาฝึกซ้อมซ้ำจนแม่นยำขึ้น</p>
 
-    <div id="streakAppBox" style="display:none;">
-      <h3 class="sigma-serif" id="streakUserDisplay" style="font-size:20px; color:var(--text-color); margin:0;"></h3>
-      <div class="streak-count-box sigma-num">🔥 <span id="streakDays">0</span> วัน</div>
-      <div style="font-size:15px; color:var(--text-color); margin-bottom:8px;">ทำแบบฝึกหัดไปแล้วทั้งหมด: <b class="sigma-num" id="streakTotalDone" style="color:var(--accent-green);">0</b> ครั้ง</div>
-      <p id="streakStatusText" style="font-size:13px; color:var(--sub-text); margin-bottom:20px;"></p>
-      
-      <button id="streakActionBtn" class="finder-btn" style="background:var(--accent-green);">📝 ทำแบบฝึกหัดแล้ว (+1 ครั้ง)</button>
-      <button id="streakLogoutBtn" class="a-btn" style="width:100%; color:var(--accent-red); border-color:var(--accent-red);">ออกจากระบบ</button>
-    </div>
+    <div id="mistakesList">
+      </div>
+
+    <button id="clearMistakesBtn" class="a-btn" style="width:100%; margin-top:10px; color:var(--accent-red); border-color:var(--accent-red);">🗑️ ล้างคลังข้อที่เคยตอบผิดทั้งหมด</button>
   </div>
 </div>
 
-<!-- Tab 6: Guide -->
 <div id="tabGuide" class="tab-panel">
   <div class="guide-card">
     <h3 class="guide-title sigma-serif">📖 คู่มือการใช้งานเว็บแอปพลิเคชัน</h3>
@@ -439,14 +442,21 @@
     <div class="guide-item">
       <div class="guide-item-title">4. หน้า แบบฝึกหัด (ทบทวนความรู้)</div>
       <div class="guide-item-desc">
-        โหมดฝึกฝนการทำโจทย์แบบ Flashcard เลือกระดับความยาก (ง่าย: 30s, กลาง: 45s, ยาก: 60s, Exponential: 60s) เมื่อพร้อมแล้วกดปุ่ม "เริ่มทำแบบฝึกหัด" ระบบจะเริ่มจับเวลานับถอยหลังในการทำโจทย์ทันที!
+        รองรับทั้งโหมดมาตรฐาน (5 ข้อ) และโหมดซ้อมมือไม่จำกัด เลือกระดับความยากแล้วกดเริ่มเพื่อจับเวลา ข้อไหนตอบผิดระบบจะบันทึกลงคลังข้อผิดให้อัตโนมัติค่ะ
       </div>
     </div>
 
     <div class="guide-item">
-      <div class="guide-item-title">5. หน้า Streak & บัญชีผู้ใช้งาน</div>
+      <div class="guide-item-title">5. คลังข้อผิด 📕</div>
       <div class="guide-item-desc">
-        ตั้งชื่อผู้ใช้เพื่อเริ่มเก็บสตรีคการทำแบบฝึกหัดต่อเนื่อง คุณสามารถเข้ามาทำแบบฝึกหัดกี่รอบก็ได้ในแต่ละวัน โดยไฟสตรีคจะเพิ่มขึ้นวันละ 1 ครั้งเมื่อเข้าทำในแต่ละวันค่ะ
+        รวบรวมโจทย์ข้อที่เคยทำผิดไว้ สามารถกดทดสอบซ้ำรายข้อได้ เพื่อช่วยให้ฝึกฝนจนกว่าจะทำได้แม่นยำค่ะ
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-item-title">6. การลงชื่อเข้าใช้ & บัญชีผู้ใช้งาน</div>
+      <div class="guide-item-desc">
+        เข้าสู่ระบบด้วย Google หรือ Email ในหน้า Setting เพื่อผูกข้อมูลสตรีคและคลังข้อผิดไว้กับบัญชีของคุณ ข้อมูลโล่รางวัลจะยังคงครบถ้วนแม้เปลี่ยนเครื่องเล่น
       </div>
     </div>
 
@@ -459,7 +469,6 @@
   </div>
 </div>
 
-<!-- Tab 7: Settings -->
 <div id="tabSettings" class="tab-panel">
   <div class="guide-card" style="max-width: 500px;">
     <h3 class="guide-title sigma-serif">⚙️ ตั้งค่าระบบ (Settings)</h3>
@@ -470,6 +479,36 @@
         <div style="font-size: 12.5px; color: var(--sub-text);">สลับระหว่าง Light Mode และ Dark Mode</div>
       </div>
       <button id="themeToggleBtn" class="a-btn" style="padding: 8px 16px;">🌙 Dark Mode</button>
+    </div>
+
+    <div class="streak-card" style="margin-bottom: 20px;">
+      <div id="streakLoginBox">
+        <h3 class="sigma-serif" style="font-size:22px; color:var(--text-color); margin-bottom:8px;">👤 เข้าสู่ระบบบัญชีผู้ใช้งาน</h3>
+        <p style="font-size:13px; color:var(--sub-text); margin-bottom:16px;">เชื่อมต่อบัญชีเพื่อบันทึกข้อมูลสตรีคและโล่รางวัลข้ามอุปกรณ์</p>
+
+        <button id="btnGoogleLogin" class="finder-btn google-btn">🌐 เข้าสู่ระบบด้วย Google Account</button>
+
+        <div class="auth-divider"><span>หรือเข้าสู่ระบบด้วย Email</span></div>
+
+        <input type="email" id="authEmail" class="finder-input" placeholder="อีเมล (Email)..." style="text-align:center; margin-bottom:8px;" />
+        <input type="password" id="authPassword" class="finder-input" placeholder="รหัสผ่าน (Password)..." style="text-align:center; margin-bottom:12px;" />
+
+        <div style="display:flex; gap:8px;">
+          <button id="btnEmailLogin" class="finder-btn" style="margin-bottom:0; font-size:14px;">เข้าสู่ระบบ</button>
+          <button id="btnEmailSignUp" class="finder-btn" style="margin-bottom:0; font-size:14px; background:var(--accent-green);">สมัครสมาชิก</button>
+        </div>
+      </div>
+
+      <div id="streakAppBox" style="display:none;">
+        <h3 class="sigma-serif" id="streakUserDisplay" style="font-size:20px; color:var(--text-color); margin:0;"></h3>
+        <p id="userEmailBadge" style="font-size:12px; color:var(--sub-text); margin-top:2px;"></p>
+        <div class="streak-count-box sigma-num">🔥 <span id="streakDays">0</span> วัน</div>
+        <div style="font-size:15px; color:var(--text-color); margin-bottom:8px;">ทำแบบฝึกหัดไปแล้วทั้งหมด: <b class="sigma-num" id="streakTotalDone" style="color:var(--accent-green);">0</b> ครั้ง</div>
+        <p id="streakStatusText" style="font-size:13px; color:var(--sub-text); margin-bottom:20px;"></p>
+        
+        <button id="streakActionBtn" class="finder-btn" style="background:var(--accent-green);">📝 ทำแบบฝึกหัดแล้ว (+1 ครั้ง)</button>
+        <button id="streakLogoutBtn" class="a-btn" style="width:100%; color:var(--accent-red); border-color:var(--accent-red);">ออกจากระบบ</button>
+      </div>
     </div>
 
     <div class="credit-box-small">
@@ -484,7 +523,6 @@
 
 </div>
 
-<!-- Modal แสดงวิธีทำ -->
 <div id="stepModal" class="modal-overlay">
   <div class="modal-card">
     <div class="modal-header">
@@ -498,6 +536,124 @@
     </div>
   </div>
 </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signOut, 
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // ค่าการเชื่อมต่อกับระบบฐานข้อมูล Firebase (สามารถทดแทนด้วย Project Config ของตนเองได้)
+  const firebaseConfig = {
+    apiKey: "AIzaSyDemoKey_ReplaceWithYourFirebaseKey",
+    authDomain: "sigma-app.firebaseapp.com",
+    projectId: "sigma-app",
+    storageBucket: "sigma-app.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:demo"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  window.currentUser = null;
+
+  // Sync Cloud Firestore Data
+  window.syncUserDataToCloud = async function() {
+    if (!window.currentUser) return;
+    const uid = window.currentUser.uid;
+    const streakData = JSON.parse(localStorage.getItem(`sigma_streak_${uid}`)) || { streak: 0, lastDate: null, totalDone: 0 };
+    const mistakesData = JSON.parse(localStorage.getItem('sigma_mistakes_bank')) || [];
+
+    try {
+      await setDoc(doc(db, "users", uid), {
+        email: window.currentUser.email,
+        displayName: window.currentUser.displayName || window.currentUser.email.split('@')[0],
+        streakData: streakData,
+        mistakesBank: mistakesData,
+        lastSynced: new Date().toISOString()
+      }, { merge: true });
+    } catch(e) {
+      console.log("Database Sync (Fallback local state active):", e);
+    }
+  };
+
+  window.loadUserDataFromCloud = async function() {
+    if (!window.currentUser) return;
+    const uid = window.currentUser.uid;
+    try {
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.streakData) {
+          localStorage.setItem(`sigma_streak_${uid}`, JSON.stringify(data.streakData));
+        }
+        if (data.mistakesBank) {
+          localStorage.setItem('sigma_mistakes_bank', JSON.stringify(data.mistakesBank));
+        }
+      }
+    } catch(e) {
+      console.log("Fetch Database Sync:", e);
+    }
+    window.loadStreakUserData();
+    if (typeof window.renderMistakesList === 'function') window.renderMistakesList();
+  };
+
+  // Auth Event Listeners
+  document.getElementById('btnGoogleLogin').addEventListener('click', () => {
+    signInWithPopup(auth, googleProvider).catch(err => alert("เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย Google: " + err.message));
+  });
+
+  document.getElementById('btnEmailSignUp').addEventListener('click', () => {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+    if(!email || !password) return alert("กรุณากรอกอีเมลและรหัสผ่าน");
+    createUserWithEmailAndPassword(auth, email, password)
+      .catch(err => alert("เกิดข้อผิดพลาดในการสมัครสมาชิก: " + err.message));
+  });
+
+  document.getElementById('btnEmailLogin').addEventListener('click', () => {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+    if(!email || !password) return alert("กรุณากรอกอีเมลและรหัสผ่าน");
+    signInWithEmailAndPassword(auth, email, password)
+      .catch(err => alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง: " + err.message));
+  });
+
+  document.getElementById('streakLogoutBtn').addEventListener('click', () => {
+    signOut(auth);
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      window.currentUser = user;
+      document.getElementById('streakLoginBox').style.display = 'none';
+      document.getElementById('streakAppBox').style.display = 'block';
+      document.getElementById('streakUserDisplay').textContent = `สวัสดีคุณ ${user.displayName || user.email.split('@')[0]}`;
+      document.getElementById('userEmailBadge').textContent = `ID: ${user.email}`;
+      await window.loadUserDataFromCloud();
+    } else {
+      window.currentUser = null;
+      document.getElementById('streakLoginBox').style.display = 'block';
+      document.getElementById('streakAppBox').style.display = 'none';
+    }
+  });
+</script>
 
 <script>
 const MAX_LIMIT=1000,MAX_N=60;
@@ -611,9 +767,12 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
     else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
-    else if(tabName==='streak') document.getElementById('tabStreak').classList.add('active');
+    else if(tabName==='mistakes') { document.getElementById('tabMistakes').classList.add('active'); renderMistakesList(); }
     else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
-    else if(tabName==='settings') document.getElementById('tabSettings').classList.add('active');
+    else if(tabName==='settings') {
+      document.getElementById('tabSettings').classList.add('active');
+      if (typeof window.loadStreakUserData === 'function') window.loadStreakUserData();
+    }
   });
 });
 
@@ -829,24 +988,137 @@ document.getElementById('customFormulaInput').addEventListener('keydown', e => {
 
 renderCustomSigmaTable();
 
+// ===== Mistake Bank Storage =====
+function getStoredMistakes() {
+  return JSON.parse(localStorage.getItem('sigma_mistakes_bank')) || [];
+}
+
+function saveMistake(q) {
+  let list = getStoredMistakes();
+  const exists = list.some(item => item.k === q.k && item.n === q.n && item.ans === q.ans && item.formulaKey === q.formula.key);
+  if (!exists) {
+    list.push({
+      k: q.k,
+      n: q.n,
+      ans: q.ans,
+      formulaKey: q.formula.key || 'custom',
+      expr: q.formula.expr,
+      display: q.formula.display
+    });
+    localStorage.setItem('sigma_mistakes_bank', JSON.stringify(list));
+    if (window.syncUserDataToCloud) window.syncUserDataToCloud();
+  }
+}
+
+function removeMistake(index) {
+  let list = getStoredMistakes();
+  list.splice(index, 1);
+  localStorage.setItem('sigma_mistakes_bank', JSON.stringify(list));
+  if (window.syncUserDataToCloud) window.syncUserDataToCloud();
+  renderMistakesList();
+}
+window.removeMistake = removeMistake;
+
+function renderMistakesList() {
+  const container = document.getElementById('mistakesList');
+  const list = getStoredMistakes();
+  container.innerHTML = '';
+
+  if (list.length === 0) {
+    container.innerHTML = '<div class="finder-empty">🎉 เยี่ยมมาก! ยังไม่มีข้อที่คุณตอบผิดในคลังเลย</div>';
+    return;
+  }
+
+  list.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'mistake-item';
+    el.innerHTML = `
+      <div>
+        <div class="mistake-eq sigma-serif">
+          <span class="glyph"><span class="glyph-stack"><span class="glyph-n">${item.n}</span><span class="glyph-sigma">Σ</span><span class="glyph-k">i=${item.k}</span></span><span class="glyph-expr">${item.expr}</span></span>
+        </div>
+        <div style="font-size:12.5px; color:var(--sub-text); margin-top:4px;">${item.display}</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="a-btn" style="background:var(--highlight-bg);" onclick="retryMistake(${idx})">🎯 ซ้อมข้อนี้</button>
+        <button class="a-btn" style="color:var(--accent-red); border-color:var(--border-color);" onclick="removeMistake(${idx})">✕</button>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+window.renderMistakesList = renderMistakesList;
+
+document.getElementById('clearMistakesBtn').addEventListener('click', () => {
+  if (confirm('คุณต้องการล้างคลังข้อที่เคยตอบผิดทั้งหมดใช่หรือไม่?')) {
+    localStorage.removeItem('sigma_mistakes_bank');
+    if (window.syncUserDataToCloud) window.syncUserDataToCloud();
+    renderMistakesList();
+  }
+});
+
+function retryMistake(index) {
+  const list = getStoredMistakes();
+  const item = list[index];
+  if (!item) return;
+
+  let fObj = FORMULAS.find(f => f.key === item.formulaKey) || {
+    key: item.formulaKey,
+    display: item.display,
+    fn: i => Math.pow(2, i),
+    expr: item.expr,
+    strExpr: i => `f(${i})`
+  };
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="flashcard"]').classList.add('active');
+  document.getElementById('tabFlashcard').classList.add('active');
+
+  isUnlimitedMode = false;
+  fcQuestions = [{ k: item.k, n: item.n, formula: fObj, ans: item.ans }];
+  FC_TOTAL = 1;
+  fcCurrentIndex = 0;
+  fcScore = 0;
+  fcMistakes = [];
+
+  document.getElementById('fcStartScreen').style.display = 'none';
+  document.getElementById('flashcardBox').style.display = 'block';
+  document.getElementById('fcSummaryBox').style.display = 'none';
+
+  renderFlashcard();
+}
+window.retryMistake = retryMistake;
+
 // ===== Flashcard System Logic =====
-const FC_TOTAL = 5;
+let FC_TOTAL = 5;
 let fcCurrentIndex = 0;
 let fcScore = 0;
 let fcQuestions = [];
 let fcMistakes = [];
 let fcCurrentQ = null;
 let currentLevel = 'easy';
+let isUnlimitedMode = false;
 
-// กำหนดสูตรแบ่งตามระดับความยาก
+document.getElementById('modeStandardBtn').addEventListener('click', () => {
+  isUnlimitedMode = false;
+  document.getElementById('modeStandardBtn').classList.add('active');
+  document.getElementById('modeUnlimitedBtn').classList.remove('active');
+});
+
+document.getElementById('modeUnlimitedBtn').addEventListener('click', () => {
+  isUnlimitedMode = true;
+  document.getElementById('modeUnlimitedBtn').classList.add('active');
+  document.getElementById('modeStandardBtn').classList.remove('active');
+});
+
 const LEVEL_FORMULAS = {
   easy: ['i', '2i', 'i2', 'i3', 'over', 'fact', 'im1'],
   medium: ['factplus_i', 'facttimes_i', 'factdiv', 'factminus_i', 'factplusfact', 'sumfact'],
   hard: ['facttimesfact', 'ipow_i', 'ipow_fact', 'factfact', 'factfact_plus_i', 'factfact_minus_i', 'factminusfact'],
-  expo: [2, 3, 4, 5, 6, 7, 8, 9] // ค่า a สำหรับ Exponential (a^i)
+  expo: [2, 3, 4, 5, 6, 7, 8, 9]
 };
 
-// กำหนดเวลาจำกัดแต่ละระดับ (วินาที)
 const LEVEL_TIMES = {
   easy: 30,
   medium: 45,
@@ -889,13 +1161,13 @@ function handleTimeOut() {
   if (inputVal !== '') {
     checkAnswer();
   } else {
-    // กรณีไม่ได้พิมพ์ตอบเมื่อหมดเวลา
     const fb = document.getElementById('fcFeedback');
     fb.style.display = 'block';
     fb.style.background = '#fde8e8';
     fb.style.color = '#C0392B';
     fb.textContent = `⏰ หมดเวลา! (คำตอบที่ถูกคือ ${fcCurrentQ.ans.toLocaleString()})`;
     fcMistakes.push(fcCurrentQ.formula.display);
+    saveMistake(fcCurrentQ);
 
     document.getElementById('fcAnswerInput').disabled = true;
     document.getElementById('fcSubmitBtn').style.display = 'none';
@@ -904,7 +1176,6 @@ function handleTimeOut() {
   }
 }
 
-// สลับระดับความยาก (ในหน้า Start Screen)
 document.querySelectorAll('.level-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
@@ -913,14 +1184,48 @@ document.querySelectorAll('.level-btn').forEach(btn => {
   });
 });
 
-// กดปุ่มเริ่มทำแบบฝึกหัด
 document.getElementById('fcStartBtn').addEventListener('click', () => {
   document.getElementById('fcStartScreen').style.display = 'none';
   document.getElementById('flashcardBox').style.display = 'block';
   document.getElementById('fcSummaryBox').style.display = 'none';
+  
+  FC_TOTAL = isUnlimitedMode ? 9999 : 5;
   generateFlashcards();
   renderFlashcard();
 });
+
+function generateSingleQuestion() {
+  const keys = LEVEL_FORMULAS[currentLevel];
+  let formulaObj, k, n, ans;
+  let attempts = 0;
+
+  do {
+    attempts++;
+    if (currentLevel === 'expo') {
+      const aVal = keys[Math.floor(Math.random() * keys.length)];
+      formulaObj = {
+        key: `expo_${aVal}`,
+        display: `f(i) = ${aVal}ⁱ`,
+        fn: i => Math.pow(aVal, i),
+        expr: `${aVal}<sup>i</sup>`,
+        strExpr: i => `${aVal}^${i}`
+      };
+    } else {
+      const selectedKey = keys[Math.floor(Math.random() * keys.length)];
+      formulaObj = FORMULAS.find(f => f.key === selectedKey);
+    }
+
+    k = Math.floor(Math.random() * 2) + 1;
+    n = k + Math.floor(Math.random() * 3) + 1;
+    
+    ans = 0;
+    for (let x = k; x <= n; x++) {
+      ans += formulaObj.fn(x);
+    }
+  } while ((ans > 10000 || ans <= 0 || !Number.isFinite(ans)) && attempts < 100);
+
+  return { k, n, formula: formulaObj, ans };
+}
 
 function generateFlashcards() {
   fcQuestions = [];
@@ -928,48 +1233,29 @@ function generateFlashcards() {
   fcCurrentIndex = 0;
   fcScore = 0;
 
-  const keys = LEVEL_FORMULAS[currentLevel];
-
-  for (let i = 0; i < FC_TOTAL; i++) {
-    let formulaObj, k, n, ans;
-    let attempts = 0;
-
-    do {
-      attempts++;
-      if (currentLevel === 'expo') {
-        const aVal = keys[Math.floor(Math.random() * keys.length)];
-        formulaObj = {
-          display: `f(i) = ${aVal}ⁱ`,
-          fn: i => Math.pow(aVal, i),
-          expr: `${aVal}<sup>i</sup>`,
-          strExpr: i => `${aVal}^${i}`
-        };
-      } else {
-        const selectedKey = keys[Math.floor(Math.random() * keys.length)];
-        formulaObj = FORMULAS.find(f => f.key === selectedKey);
-      }
-
-      k = Math.floor(Math.random() * 2) + 1; // 1 ถึง 2
-      n = k + Math.floor(Math.random() * 3) + 1; // k+1 ถึง k+3
-      
-      ans = 0;
-      for (let x = k; x <= n; x++) {
-        ans += formulaObj.fn(x);
-      }
-    } while ((ans > 10000 || ans <= 0 || !Number.isFinite(ans)) && attempts < 100);
-
-    fcQuestions.push({ k, n, formula: formulaObj, ans });
+  for (let i = 0; i < (isUnlimitedMode ? 10 : FC_TOTAL); i++) {
+    fcQuestions.push(generateSingleQuestion());
   }
 }
 
 function renderFlashcard() {
-  if (fcCurrentIndex >= FC_TOTAL) {
+  if (!isUnlimitedMode && fcCurrentIndex >= FC_TOTAL) {
     showFcSummary();
     return;
   }
 
+  if (isUnlimitedMode && fcCurrentIndex >= fcQuestions.length) {
+    fcQuestions.push(generateSingleQuestion());
+  }
+
   fcCurrentQ = fcQuestions[fcCurrentIndex];
-  document.getElementById('fcStepText').textContent = `ข้อที่ ${fcCurrentIndex + 1} / ${FC_TOTAL}`;
+  
+  if (isUnlimitedMode) {
+    document.getElementById('fcStepText').textContent = `ข้อที่ ${fcCurrentIndex + 1} (สะสมถูก ${fcScore} ข้อ)`;
+  } else {
+    document.getElementById('fcStepText').textContent = `ข้อที่ ${fcCurrentIndex + 1} / ${FC_TOTAL}`;
+  }
+
   document.getElementById('fcQuestion').innerHTML = `
     <span class="glyph"><span class="glyph-stack"><span class="glyph-n">${fcCurrentQ.n}</span><span class="glyph-sigma">Σ</span><span class="glyph-k">i=${fcCurrentQ.k}</span></span><span class="glyph-expr">${fcCurrentQ.formula.expr}</span></span>
   `;
@@ -1001,6 +1287,7 @@ function checkAnswer() {
     fb.style.color = '#C0392B';
     fb.textContent = `❌ ยังไม่ถูกต้อง (คำตอบที่ถูกคือ ${fcCurrentQ.ans.toLocaleString()})`;
     fcMistakes.push(fcCurrentQ.formula.display);
+    saveMistake(fcCurrentQ);
   }
 
   document.getElementById('fcAnswerInput').disabled = true;
@@ -1041,10 +1328,10 @@ function showFcSummary() {
     analysis.innerHTML = '<b>วิเคราะห์ผล:</b> เก่งมาก ฝึกฝนต่อไปค่ะ คุณมีความเข้าใจเกี่ยวกับสูตรและการคำนวณ Sigma เป็นอย่างดี!';
   } else {
     const uniqueMistakes = [...new Set(fcMistakes)].join(', ');
-    analysis.innerHTML = `<b>วิเคราะห์จุดที่ควรทบทวน:</b> จากการทดสอบ คุณอาจยังสับสนในสูตรต่อไปนี้: <br/><b>${uniqueMistakes}</b><br/>💡 <i>แนะนำให้ลองกลับไปกดดูวิธีคิดในหน้า <b>Sigma Table</b> เพื่อเพิ่มความแม่นยำนะคะ</i>`;
+    analysis.innerHTML = `<b>วิเคราะห์จุดที่ควรทบทวน:</b> จากการทดสอบ คุณอาจยังสับสนในสูตรต่อไปนี้: <br/><b>${uniqueMistakes}</b><br/>💡 <i>ข้อที่ตอบผิดถูกบันทึกเข้าแท็บ <b>คลังข้อผิด 📕</b> เรียบร้อยแล้ว สามารถกดไปฝึกซ้ำได้เลยค่ะ</i>`;
   }
 
-  if (currentStreakUser) {
+  if (window.currentUser) {
     addStreakProgress();
   }
 }
@@ -1055,12 +1342,11 @@ document.getElementById('fcRestartBtn').addEventListener('click', () => {
   document.getElementById('fcSummaryBox').style.display = 'none';
 });
 
-// ===== Streak & User Account Logic =====
-let currentStreakUser = null;
-
-function loadStreakUserData() {
-  if (!currentStreakUser) return;
-  const data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
+// ===== Streak & User Account Data Logic =====
+window.loadStreakUserData = function() {
+  if (!window.currentUser) return;
+  const uid = window.currentUser.uid;
+  const data = JSON.parse(localStorage.getItem(`sigma_streak_${uid}`)) || { streak: 0, lastDate: null, totalDone: 0 };
   const today = new Date().toISOString().split('T')[0];
 
   if (data.lastDate) {
@@ -1070,7 +1356,7 @@ function loadStreakUserData() {
     
     if (diffDays > 1) {
       data.streak = 0;
-      localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
+      localStorage.setItem(`sigma_streak_${uid}`, JSON.stringify(data));
     }
   }
 
@@ -1082,46 +1368,31 @@ function loadStreakUserData() {
   } else {
     document.getElementById('streakStatusText').textContent = '📌 อย่าลืมกดทำแบบฝึกหัดวันนี้เพื่อเก็บไฟสตรีคนะคะ!';
   }
-}
+};
 
 function addStreakProgress() {
-  if (!currentStreakUser) return;
+  if (!window.currentUser) return;
+  const uid = window.currentUser.uid;
   const today = new Date().toISOString().split('T')[0];
-  let data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
+  let data = JSON.parse(localStorage.getItem(`sigma_streak_${uid}`)) || { streak: 0, lastDate: null, totalDone: 0 };
 
   data.totalDone = (data.totalDone || 0) + 1;
 
   if (data.lastDate !== today) {
     data.streak += 1;
     data.lastDate = today;
-    alert(`🎉 ยินดีด้วยคุณ ${currentStreakUser}! จุดไฟสตรีคสำเร็จ เพิ่มเป็น ${data.streak} วันแล้ว 🔥`);
+    alert(`🎉 ยินดีด้วยคุณ ${window.currentUser.displayName || window.currentUser.email}! จุดไฟสตรีคสำเร็จ เพิ่มเป็น ${data.streak} วันแล้ว 🔥`);
   } else {
     alert(`เก่งมาก ฝึกฝนต่อไป (สะสมรอบทำแบบฝึกหัดเพิ่มอีก 1 ครั้ง รวมเป็น ${data.totalDone} ครั้งค่ะ)`);
   }
 
-  localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
-  loadStreakUserData();
+  localStorage.setItem(`sigma_streak_${uid}`, JSON.stringify(data));
+  if (window.syncUserDataToCloud) window.syncUserDataToCloud();
+  window.loadStreakUserData();
 }
-
-document.getElementById('streakLoginBtn').addEventListener('click', () => {
-  const username = document.getElementById('streakUsername').value.trim();
-  if (!username) return alert('กรุณาพิมพ์ชื่อผู้ใช้งานก่อนนะคะ');
-  currentStreakUser = username;
-  document.getElementById('streakLoginBox').style.display = 'none';
-  document.getElementById('streakAppBox').style.display = 'block';
-  document.getElementById('streakUserDisplay').textContent = `สวัสดีคุณ ${currentStreakUser}`;
-  loadStreakUserData();
-});
 
 document.getElementById('streakActionBtn').addEventListener('click', () => {
   addStreakProgress();
-});
-
-document.getElementById('streakLogoutBtn').addEventListener('click', () => {
-  currentStreakUser = null;
-  document.getElementById('streakUsername').value = '';
-  document.getElementById('streakLoginBox').style.display = 'block';
-  document.getElementById('streakAppBox').style.display = 'none';
 });
 </script>
 </body>
