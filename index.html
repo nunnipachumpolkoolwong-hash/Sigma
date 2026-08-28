@@ -210,6 +210,27 @@
     font-size: 42px; font-weight: bold; color: #E67E22; margin: 15px 0;
     background: var(--bg-color); border: 2px dashed #E67E22; border-radius: 12px; padding: 15px;
   }
+
+  /* Level Selector UI */
+  .level-selector { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .level-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-family: 'Mali', cursive; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+  .level-btn.active { background: var(--text-color); color: var(--card-bg); border-color: var(--text-color); font-weight: bold; }
+
+  /* Timer UI Styles */
+  .timer-box {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--highlight-bg); border: 1.5px solid var(--accent-red);
+    color: var(--accent-red); font-weight: bold; padding: 4px 12px;
+    border-radius: 20px; font-size: 14px; font-family: 'Varela Round', sans-serif;
+  }
+  .timer-progress-bar {
+    width: 100%; height: 6px; background: var(--border-color);
+    border-radius: 3px; overflow: hidden; margin-top: 8px; margin-bottom: 12px;
+  }
+  .timer-progress-fill {
+    height: 100%; background: var(--accent-red); width: 100%;
+    transition: width 1s linear;
+  }
 </style>
 </head>
 <body>
@@ -314,8 +335,26 @@
   <div class="guide-card" style="max-width: 600px;">
     <h3 class="guide-title sigma-serif">แบบฝึกหัดทบทวนความเข้าใจ</h3>
     
+    <!-- ปุ่มเลือกระดับความยาก -->
+    <div class="level-selector">
+      <button class="level-btn active" data-level="easy">ง่าย (30s)</button>
+      <button class="level-btn" data-level="medium">กลาง (45s)</button>
+      <button class="level-btn" data-level="hard">ยาก (60s)</button>
+      <button class="level-btn" data-level="expo">Exponential (60s)</button>
+    </div>
+
     <div id="flashcardBox" style="background:var(--bg-color); border:2px dashed var(--border-color); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px;">
-      <div style="font-size:14px; color:var(--sub-text); margin-bottom:8px;" id="fcStepText">ข้อที่ 1/5</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="font-size:14px; color:var(--sub-text);" id="fcStepText">ข้อที่ 1/5</div>
+        <!-- แสดงเวลาถอยหลัง -->
+        <div class="timer-box">⏱️ เหลือเวลา: <span id="fcTimerSeconds">30</span>s</div>
+      </div>
+
+      <!-- แถบพลังงานเวลา -->
+      <div class="timer-progress-bar">
+        <div id="fcTimerFill" class="timer-progress-fill"></div>
+      </div>
+
       <div class="sigma-serif" style="font-size:28px; color:var(--text-color); margin-bottom:16px;" id="fcQuestion">Σ ...</div>
       
       <div style="display:flex; justify-content:center; gap:10px; margin-bottom:16px;">
@@ -392,7 +431,7 @@
     <div class="guide-item">
       <div class="guide-item-title">4. หน้า แบบฝึกหัด (ทบทวนความรู้)</div>
       <div class="guide-item-desc">
-        โหมดฝึกฝนการทำโจทย์แบบ Flashcard ระบบจะสุ่มโจทย์ที่ผลลัพธ์ไม่เกิน 1,000 ให้ทดลองคิดคำตอบ หากตอบผิดสามารถกดดูวิธีคิด Step-by-Step ได้ เมื่อทำครบระบบจะบันทึกการส่งงานเพิ่มสตรีคให้อัตโนมัติค่ะ!
+        โหมดฝึกฝนการทำโจทย์แบบ Flashcard เลือกระดับความยาก (ง่าย: 30s, กลาง: 45s, ยาก: 60s, Exponential: 60s) ระบบจะนับถอยหลังการทำโจทย์เมื่อเวลาหมดระบบจะตรวจคำตอบให้อัตโนมัติค่ะ!
       </div>
     </div>
 
@@ -454,7 +493,7 @@
 
 <script>
 const MAX_LIMIT=1000,MAX_N=60;
-function factorial(n){if(n<=1)return 1;let r=1;for(let k=2;k<=n;k++)r*=k;return r}
+function factorial(n){if(n<=0)return 1;if(n<=1)return 1;let r=1;for(let k=2;k<=n;k++)r*=k;return r}
 
 const FORMULAS=[
 {key:'i',display:'f(i) = i',fn:i=>i,expr:'i',strExpr:i=>`${i}`},
@@ -789,6 +828,87 @@ let fcScore = 0;
 let fcQuestions = [];
 let fcMistakes = [];
 let fcCurrentQ = null;
+let currentLevel = 'easy';
+
+// กำหนดสูตรแบ่งตามระดับความยาก
+const LEVEL_FORMULAS = {
+  easy: ['i', '2i', 'i2', 'i3', 'over', 'fact', 'im1'],
+  medium: ['factplus_i', 'facttimes_i', 'factdiv', 'factminus_i', 'factplusfact', 'sumfact'],
+  hard: ['facttimesfact', 'ipow_i', 'ipow_fact', 'factfact', 'factfact_plus_i', 'factfact_minus_i', 'factminusfact'],
+  expo: [2, 3, 4, 5, 6, 7, 8, 9] // ค่า a สำหรับ Exponential (a^i)
+};
+
+// กำหนดเวลาจำกัดแต่ละระดับ (วินาที)
+const LEVEL_TIMES = {
+  easy: 30,
+  medium: 45,
+  hard: 60,
+  expo: 60
+};
+
+let timerInterval = null;
+let timeLeft = 0;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  const maxTime = LEVEL_TIMES[currentLevel];
+  timeLeft = maxTime;
+
+  const secondsEl = document.getElementById('fcTimerSeconds');
+  const fillEl = document.getElementById('fcTimerFill');
+  
+  secondsEl.textContent = timeLeft;
+  fillEl.style.width = '100%';
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    secondsEl.textContent = timeLeft;
+    fillEl.style.width = `${(timeLeft / maxTime) * 100}%`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      handleTimeOut();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+function handleTimeOut() {
+  const inputVal = document.getElementById('fcAnswerInput').value.trim();
+  if (inputVal !== '') {
+    checkAnswer();
+  } else {
+    // กรณีไม่ได้พิมพ์ตอบเมื่อหมดเวลา
+    const fb = document.getElementById('fcFeedback');
+    fb.style.display = 'block';
+    fb.style.background = '#fde8e8';
+    fb.style.color = '#C0392B';
+    fb.textContent = `⏰ หมดเวลา! (คำตอบที่ถูกคือ ${fcCurrentQ.ans.toLocaleString()})`;
+    fcMistakes.push(fcCurrentQ.formula.display);
+
+    document.getElementById('fcAnswerInput').disabled = true;
+    document.getElementById('fcSubmitBtn').style.display = 'none';
+    document.getElementById('fcStepBtn').style.display = 'block';
+    document.getElementById('fcNextBtn').style.display = 'block';
+  }
+}
+
+// สลับระดับความยาก
+document.querySelectorAll('.level-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentLevel = btn.dataset.level;
+    
+    document.getElementById('flashcardBox').style.display = 'block';
+    document.getElementById('fcSummaryBox').style.display = 'none';
+    generateFlashcards();
+    renderFlashcard();
+  });
+});
 
 function generateFlashcards() {
   fcQuestions = [];
@@ -796,20 +916,37 @@ function generateFlashcards() {
   fcCurrentIndex = 0;
   fcScore = 0;
 
+  const keys = LEVEL_FORMULAS[currentLevel];
+
   for (let i = 0; i < FC_TOTAL; i++) {
-    let formula, k, n, ans;
+    let formulaObj, k, n, ans;
+    let attempts = 0;
+
     do {
-      formula = FORMULAS[Math.floor(Math.random() * FORMULAS.length)];
-      k = Math.floor(Math.random() * 3) + 1;
-      n = k + Math.floor(Math.random() * 4) + 1;
+      attempts++;
+      if (currentLevel === 'expo') {
+        const aVal = keys[Math.floor(Math.random() * keys.length)];
+        formulaObj = {
+          display: `f(i) = ${aVal}ⁱ`,
+          fn: i => Math.pow(aVal, i),
+          expr: `${aVal}<sup>i</sup>`,
+          strExpr: i => `${aVal}^${i}`
+        };
+      } else {
+        const selectedKey = keys[Math.floor(Math.random() * keys.length)];
+        formulaObj = FORMULAS.find(f => f.key === selectedKey);
+      }
+
+      k = Math.floor(Math.random() * 2) + 1; // 1 ถึง 2
+      n = k + Math.floor(Math.random() * 3) + 1; // k+1 ถึง k+3
       
       ans = 0;
       for (let x = k; x <= n; x++) {
-        ans += formula.fn(x);
+        ans += formulaObj.fn(x);
       }
-    } while (ans > 1000 || ans <= 0 || !Number.isFinite(ans));
+    } while ((ans > 10000 || ans <= 0 || !Number.isFinite(ans)) && attempts < 100);
 
-    fcQuestions.push({ k, n, formula, ans });
+    fcQuestions.push({ k, n, formula: formulaObj, ans });
   }
 }
 
@@ -831,19 +968,21 @@ function renderFlashcard() {
   document.getElementById('fcFeedback').style.display = 'none';
   document.getElementById('fcStepBtn').style.display = 'none';
   document.getElementById('fcNextBtn').style.display = 'none';
+
+  startTimer();
 }
 
-document.getElementById('fcSubmitBtn').addEventListener('click', () => {
+function checkAnswer() {
+  stopTimer();
   const userAns = parseInt(document.getElementById('fcAnswerInput').value, 10);
-  if (isNaN(userAns)) return;
 
   const fb = document.getElementById('fcFeedback');
   fb.style.display = 'block';
 
-  if (userAns === fcCurrentQ.ans) {
+  if (!isNaN(userAns) && userAns === fcCurrentQ.ans) {
     fb.style.background = '#eaf4ec';
     fb.style.color = '#2F855A';
-    fb.textContent = '🎉 เก่งมาก ฝึกฝนต่อไป';
+    fb.textContent = '🎉 เก่งมาก ตอบถูกต้อง!';
     fcScore++;
   } else {
     fb.style.background = '#fde8e8';
@@ -856,6 +995,13 @@ document.getElementById('fcSubmitBtn').addEventListener('click', () => {
   document.getElementById('fcSubmitBtn').style.display = 'none';
   document.getElementById('fcStepBtn').style.display = 'block';
   document.getElementById('fcNextBtn').style.display = 'block';
+}
+
+document.getElementById('fcSubmitBtn').addEventListener('click', checkAnswer);
+document.getElementById('fcAnswerInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('fcAnswerInput').disabled) {
+    checkAnswer();
+  }
 });
 
 document.getElementById('fcStepBtn').addEventListener('click', () => {
@@ -870,6 +1016,7 @@ document.getElementById('fcNextBtn').addEventListener('click', () => {
 });
 
 function showFcSummary() {
+  stopTimer();
   document.getElementById('flashcardBox').style.display = 'none';
   document.getElementById('fcNextBtn').style.display = 'none';
   const summaryBox = document.getElementById('fcSummaryBox');
