@@ -317,7 +317,7 @@
   <button class="tab-btn" data-tab="customTools">Custom Formula</button>
   <button class="tab-btn" data-tab="flashcard">ฝึกฝน/แบบฝึกหัด</button>
   <button class="tab-btn" data-tab="mistakes">คลังข้อผิด</button>
-  <button class="tab-btn" data-tab="streak">Streak & บัญชี</button>
+  <button class="tab-btn" data-tab="streak">Streak</button>
   <button class="tab-btn" data-tab="trophies">ถ้วยรางวัล</button>
   <button class="tab-btn" data-tab="guide">คู่มือการใช้งาน</button>
   <button class="tab-btn" data-tab="settings">Setting</button>
@@ -420,9 +420,9 @@
     <div id="fcStartScreen" style="text-align:center; padding: 10px 0;">
       <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">กรุณาเลือกระดับความยากที่ต้องการทดสอบ แล้วกดปุ่มเริ่มเพื่อจับเวลา</p>
       <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับง่ายจะประกอบด้วย i , i+i , i*i , i^3 , i/i , i! , i-1 </p>
-            <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับกลางจะประกอบด้วย i!+i , i!*i , i!/i , i!-i , i!+i! , (i+i)! </p>
-            <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับยากจะประกอบด้วย i!*i! , i^i , i^i! , (i!)! , ((i!)!+i) , ((i!)!-i) , (i!-i)! </p>
-            <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับexponentialจะประกอบด้วย 2^i ,3^i ,4^i ,5^i ,6^i ,7^i ,8^i ,9^i </p>
+      <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับกลางจะประกอบด้วย i!+i , i!*i , i!/i , i!-i , i!+i! , (i+i)! </p>
+      <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับยากจะประกอบด้วย i!*i! , i^i , i^i! , (i!)! , ((i!)!+i) , ((i!)!-i) , (i!-i)! </p>
+      <p style="font-size:15px; color:var(--sub-text); margin-bottom:20px;">ระดับexponentialจะประกอบด้วย 2^i ,3^i ,4^i ,5^i ,6^i ,7^i ,8^i ,9^i </p>
 
       <div class="level-selector">
         <button class="level-btn active" data-level="easy">ง่าย (30s)</button>
@@ -481,25 +481,12 @@
   </div>
 </div>
 
-<!-- Tab 6: Streak & User Account -->
+<!-- Tab 6: Streak -->
 <div id="tabStreak" class="tab-panel">
   <div class="streak-card">
-    <div id="streakLoginBox">
-      <h3 class="sigma-serif" style="font-size:22px; color:var(--text-color); margin-bottom:12px;">👤 บัญชีผู้ใช้งาน</h3>
-      <p style="font-size:13.5px; color:var(--sub-text); margin-bottom:16px;">ระบุชื่อเพื่อบันทึกและสะสมคะแนนจากแบบฝึกหัด</p>
-      <input type="text" id="streakUsername" class="finder-input" placeholder="พิมพ์ชื่อผู้ใช้..." style="text-align:center;" />
-      <button id="streakLoginBtn" class="finder-btn" style="margin-bottom:0;">เข้าสู่ระบบ / บันทึกชื่อ</button>
-    </div>
-
-    <div id="streakAppBox" style="display:none;">
-      <h3 class="sigma-serif" id="streakUserDisplay" style="font-size:20px; color:var(--text-color); margin:0;"></h3>
-      <div class="streak-count-box sigma-num">🔥 <span id="streakDays">0</span> วัน</div>
-      <div style="font-size:15px; color:var(--text-color); margin-bottom:8px;">ทำสะสมทั้งหมด: <b class="sigma-num" id="totalScoreCount" style="color:var(--accent-green);">0</b> ครั้ง</div>
-      <p id="streakStatusText" style="font-size:13px; color:var(--sub-text); margin-bottom:20px;"></p>
-      
-      <button id="streakActionBtn" class="finder-btn" style="background:var(--accent-green);">📝 ทำแบบฝึกหัดแล้ว (+1 คะแนน)</button>
-      <button id="streakLogoutBtn" class="a-btn" style="width:100%; color:var(--accent-red); border-color:var(--accent-red);">ออกจากระบบ</button>
-    </div>
+    <h3 class="sigma-serif" style="font-size:22px; color:var(--text-color); margin-bottom:12px;">🔥 บันทึกสตรีคประจำวัน</h3>
+    <div class="streak-count-box sigma-num">🔥 <span id="streakDays">0</span> วัน</div>
+    <p id="streakStatusText" style="font-size:13.5px; color:var(--sub-text); margin-bottom:0;"></p>
   </div>
 </div>
 
@@ -507,9 +494,8 @@
 <div id="tabTrophies" class="tab-panel">
   <div class="trophy-container">
     <h1 class="sigma-serif">🏆 ระบบสะสมคะแนนและรางวัล</h1>
-    <p class="subtitle">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อปลดล็อกเหรียญและถ้วยรางวัลทั้ง 12 ระดับ</p>
+    <p class="subtitle">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อปลดล็อกเหรียญและถ้วยรางวัลทั้ง 15 ระดับ</p>
 
-    <!-- ส่วนที่ 1 & 2: ตรวจสอบระดับรางวัล & สถานะปัจจุบัน -->
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
       
       <!-- การ์ดที่ 1: ตรวจสอบระดับรางวัล -->
@@ -518,15 +504,13 @@
         <label class="finder-label">คะแนนสะสมทั้งหมด (ดึงอัตโนมัติ):</label>
         <div id="trophyScoreDisplayBox" class="finder-input sigma-num" style="background:var(--bg-color); font-weight:bold; color:var(--text-color);">0 ข้อ</div>
         <p style="font-size:12.5px; color:var(--sub-text); margin-bottom:14px;">🔒 ป้องกันการโกง: ระบบดึงคะแนนสะสมจริงจากการทำแบบฝึกหัด</p>
-
-
       </div>
 
       <!-- การ์ดที่ 2: สถานะรางวัลปัจจุบัน -->
       <div class="trophy-section-card">
         <h3 class="trophy-section-title">2. สถานะรางวัลปัจจุบัน</h3>
         <div style="display:flex; align-items:center; gap: 16px; margin-top: 10px;">
-          <div id="currentBadgeIcon" style="font-size: 52px; background: var(--bg-color); padding: 12px; border-radius: 12px; border: 1.5px solid var(--border-color);">🛡️</div>
+          <div id="currentBadgeIcon" style="font-size: 52px; background: var(--bg-color); padding: 12px; border-radius: 12px; border: 1.5px solid var(--border-color);">🌱</div>
           <div>
             <div id="currentBadgeTitle" class="sigma-serif" style="font-size: 18px; color: var(--accent-red);">ผู้เล่นใหม่ (ระดับ 0)</div>
             <div id="currentBadgeNextGoal" style="font-size: 13.5px; color: var(--sub-text); margin-top: 4px;">ต้องการอีก 50 ข้อ เพื่อไปปลดล็อก โล่ชมเชย</div>
@@ -536,12 +520,10 @@
 
     </div>
 
-    <!-- ส่วนที่ 3: เหรียญและถ้วยรางวัลทั้งหมด (12 ระดับ) -->
+    <!-- ส่วนที่ 3: เหรียญและถ้วยรางวัลทั้งหมด (15 ระดับ) -->
     <div class="trophy-section-card">
-      <h3 class="trophy-section-title">3. เหรียญและถ้วยรางวัลทั้งหมด (12 ระดับ)</h3>
-      <div class="trophy-grid-12" id="trophyGrid12Container">
-        <!-- สร้างผ่าน JavaScript ด้านล่าง -->
-      </div>
+      <h3 class="trophy-section-title">3. เหรียญและถ้วยรางวัลทั้งหมด (15 ระดับ)</h3>
+      <div class="trophy-grid-12" id="trophyGrid12Container"></div>
     </div>
 
   </div>
@@ -578,12 +560,12 @@
     </div>
 
     <div class="guide-item">
-      <div class="guide-item-title">6. หน้า Streak & บัญชีผู้ใช้งาน</div>
-      <div class="guide-item-desc">ตั้งชื่อผู้ใช้เพื่อเริ่มเก็บคะแนนและสตรีคการทำแบบฝึกหัดต่อเนื่อง</div>
+      <div class="guide-item-title">6. หน้า Streak</div>
+      <div class="guide-item-desc">แสดงจำนวนวันสตรีกต่อเนื่องของคุณโดยดึงข้อมูลจากเครื่องอัตโนมัติ</div>
     </div>
 
     <div class="guide-item">
-      <div class="guide-item-title">7. ถ้วยรางวัลและระบบ 12 ระดับ</div>
+      <div class="guide-item-title">7. ถ้วยรางวัลและระบบ 15 ระดับ</div>
       <div class="guide-item-desc">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อไต่อันดับปลดล็อกเหรียญและถ้วยรางวัลตั้งแต่ระดับ 1 ถึง 12 ตามเงื่อนไขคะแนนที่กำหนด</div>
     </div>
 
@@ -747,7 +729,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
     else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
     else if(tabName==='mistakes') { document.getElementById('tabMistakes').classList.add('active'); renderMistakesList(); }
-    else if(tabName==='streak') document.getElementById('tabStreak').classList.add('active');
+    else if(tabName==='streak') { document.getElementById('tabStreak').classList.add('active'); loadStreakData(); }
     else if(tabName==='trophies') { document.getElementById('tabTrophies').classList.add('active'); updateTrophiesUI(); }
     else if(tabName==='guide') document.getElementById('tabGuide').classList.add('active');
     else if(tabName==='settings') document.getElementById('tabSettings').classList.add('active');
@@ -1307,75 +1289,45 @@ document.getElementById('fcRestartBtn').addEventListener('click', () => {
   document.getElementById('fcSummaryBox').style.display = 'none';
 });
 
-// ===== Streak & User Account Logic =====
-let currentStreakUser = null;
-
-function loadStreakUserData() {
-  if (!currentStreakUser) return;
-  const data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
+// ===== Streak System (Auto Daily Tracker via LocalStorage) =====
+function loadStreakData() {
+  const storageKey = 'sigma_streak_days';
+  const lastDateKey = 'sigma_streak_last_date';
+  
+  let streak = parseInt(localStorage.getItem(storageKey) || '0', 10);
+  let lastDate = localStorage.getItem(lastDateKey);
+  
   const today = new Date().toISOString().split('T')[0];
 
-  if (data.lastDate) {
-    const last = new Date(data.lastDate);
+  if (lastDate) {
+    const last = new Date(lastDate);
     const now = new Date(today);
     const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
     
-    if (diffDays > 1) {
-      data.streak = 0;
-      localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
+    if (diffDays === 1) {
+      streak += 1;
+      localStorage.setItem(storageKey, streak);
+      localStorage.setItem(lastDateKey, today);
+    } else if (diffDays > 1) {
+      streak = 1;
+      localStorage.setItem(storageKey, streak);
+      localStorage.setItem(lastDateKey, today);
     }
-  }
-
-  document.getElementById('streakDays').textContent = data.streak;
-  document.getElementById('totalScoreCount').textContent = data.totalDone || 0;
-
-  if (data.lastDate === today) {
-    document.getElementById('streakStatusText').textContent = '⚡ วันนี้จุดไฟสตรีคแล้ว! (ทำแบบฝึกหัดเพิ่มได้เรื่อยๆ นะคะ)';
   } else {
-    document.getElementById('streakStatusText').textContent = '📌 อย่าลืมกดทำแบบฝึกหัดวันนี้เพื่อเก็บไฟสตรีคนะคะ!';
-  }
-}
-
-function addStreakProgress() {
-  if (!currentStreakUser) return;
-  const today = new Date().toISOString().split('T')[0];
-  let data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
-
-  data.totalDone = (data.totalDone || 0) + 1;
-
-  if (data.lastDate !== today) {
-    data.streak += 1;
-    data.lastDate = today;
+    streak = 1;
+    localStorage.setItem(storageKey, streak);
+    localStorage.setItem(lastDateKey, today);
   }
 
-  localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
-  loadStreakUserData();
+  document.getElementById('streakDays').textContent = streak;
+  document.getElementById('streakStatusText').textContent = '✨ เช็คอินวันต่อเนื่องให้อัตโนมัติเรียบร้อยแล้ว!';
 }
 
-document.getElementById('streakLoginBtn').addEventListener('click', () => {
-  const username = document.getElementById('streakUsername').value.trim();
-  if (!username) return alert('กรุณาพิมพ์ชื่อผู้ใช้งานก่อนนะคะ');
-  currentStreakUser = username;
-  document.getElementById('streakLoginBox').style.display = 'none';
-  document.getElementById('streakAppBox').style.display = 'block';
-  document.getElementById('streakUserDisplay').textContent = `สวัสดีคุณ ${currentStreakUser}`;
-  loadStreakUserData();
-});
-
-document.getElementById('streakActionBtn').addEventListener('click', () => {
-  addStreakProgress();
-  addTotalScore(1);
-});
-
-document.getElementById('streakLogoutBtn').addEventListener('click', () => {
-  currentStreakUser = null;
-  document.getElementById('streakUsername').value = '';
-  document.getElementById('streakLoginBox').style.display = 'block';
-  document.getElementById('streakAppBox').style.display = 'none';
-});
+// เรียกใช้งานทันทีเมื่อโหลดหน้าเว็บ
+loadStreakData();
 
 
-// ===== Trophies & 12 Levels System Logic =====
+// ===== Trophies & 15 Levels System Logic =====
 const TROPHIES_12_DATA = [
   { level: 0, name: 'ผู้เล่นใหม่', req: 0, icon: '🌱' },
   { level: 1, name: 'เหรียญชมเชย', req: 50, icon: '🎖️' },
@@ -1389,26 +1341,18 @@ const TROPHIES_12_DATA = [
   { level: 9, name: 'ถ้วยไข่มุก', req: 700, icon: '🏆🐚' },
   { level: 10, name: 'ถ้วยออบซิเดียน', req: 800, icon: '🏆🖤' },
   { level: 11, name: 'ถ้วยเพชร', req: 900, icon: '🏆💎' },
-  { level: 12, name: 'ถ้วยสีรุ้ง', req: 1000, icon: '🏆🌈' }
+  { level: 12, name: 'ถ้วยสีรุ้ง', req: 1000, icon: '🏆🌈' },
+  { level: 13, name: 'ถ้วยมรกต', req: 2500, icon: '🏆💚' },
+  { level: 14, name: 'ถ้วยคริสตัล', req: 5000, icon: '🏆🔮' },
+  { level: 15, name: 'ถ้วยแซฟไฟร์', req: 10000, icon: '🏆🌌' },
 ];
 
 function getTotalScore() {
-  if (currentStreakUser) {
-    const data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { totalDone: 0 };
-    return data.totalDone || 0;
-  }
   return parseInt(localStorage.getItem('sigma_guest_score') || '0', 10);
 }
 
 function setTotalScore(val) {
-  if (currentStreakUser) {
-    let data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { streak: 0, lastDate: null, totalDone: 0 };
-    data.totalDone = val;
-    localStorage.setItem(`sigma_streak_${currentStreakUser}`, JSON.stringify(data));
-    loadStreakUserData();
-  } else {
-    localStorage.setItem('sigma_guest_score', val.toString());
-  }
+  localStorage.setItem('sigma_guest_score', val.toString());
   updateTrophiesUI();
 }
 
@@ -1417,19 +1361,10 @@ function addTotalScore(amount) {
   setTotalScore(current + amount);
 }
 
-function addSimulateScore(amount) {
-  addTotalScore(amount);
-}
-
-function resetSimulateScore() {
-  setTotalScore(0);
-}
-
 function updateTrophiesUI() {
   const score = getTotalScore();
   document.getElementById('trophyScoreDisplayBox').textContent = `${score} ข้อ`;
 
-  // ห้าระดับปัจจุบันและถัดไป
   let currentObj = TROPHIES_12_DATA[0];
   let nextObj = TROPHIES_12_DATA[1];
 
@@ -1450,7 +1385,6 @@ function updateTrophiesUI() {
     document.getElementById('currentBadgeNextGoal').textContent = `🎉 สุดยอด! คุณปลดล็อกรางวัลสูงสุด (ระดับ 12) ครบถ้วนแล้ว`;
   }
 
-  // เรนเดอร์การ์ด 12 ระดับ
   const container = document.getElementById('trophyGrid12Container');
   container.innerHTML = '';
 
@@ -1473,7 +1407,6 @@ function updateTrophiesUI() {
   });
 }
 
-// โหลดครั้งแรกเมื่อเปิดหน้าเว็บ
 updateTrophiesUI();
 </script>
 </body>
