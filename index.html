@@ -503,7 +503,7 @@
 <div id="tabTrophies" class="tab-panel">
   <div class="trophy-container">
     <h1 class="sigma-serif">🏆 ระบบสะสมคะแนนและรางวัล</h1>
-    <p class="subtitle">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อปลดล็อกโล่และถ้วยรางวัลทั้ง 12 ระดับ</p>
+    <p class="subtitle">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อปลดล็อกเหรียญและถ้วยรางวัลทั้ง 12 ระดับ</p>
 
     <!-- ส่วนที่ 1 & 2: ตรวจสอบระดับรางวัล & สถานะปัจจุบัน -->
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
@@ -525,16 +525,16 @@
           <div id="currentBadgeIcon" style="font-size: 52px; background: var(--bg-color); padding: 12px; border-radius: 12px; border: 1.5px solid var(--border-color);">🛡️</div>
           <div>
             <div id="currentBadgeTitle" class="sigma-serif" style="font-size: 18px; color: var(--accent-red);">ผู้เล่นใหม่ (ระดับ 0)</div>
-            <div id="currentBadgeNextGoal" style="font-size: 13.5px; color: var(--sub-text); margin-top: 4px;">ต้องการอีก 50 ข้อ เพื่อไปปลดล็อก โล่ชมเชย</div>
+            <div id="currentBadgeNextGoal" style="font-size: 13.5px; color: var(--sub-text); margin-top: 4px;">ต้องการอีก 50 ข้อ เพื่อไปปลดล็อก เหรียญชมเชย</div>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- ส่วนที่ 3: ทำเนียบโล่และถ้วยรางวัลทั้งหมด (12 ระดับ) -->
+    <!-- ส่วนที่ 3: เหรียญและถ้วยรางวัลทั้งหมด (12 ระดับ) -->
     <div class="trophy-section-card">
-      <h3 class="trophy-section-title">3. ทำเนียบโล่และถ้วยรางวัลทั้งหมด (12 ระดับ)</h3>
+      <h3 class="trophy-section-title">3. เหรียญและถ้วยรางวัลทั้งหมด (12 ระดับ)</h3>
       <div class="trophy-grid-12" id="trophyGrid12Container">
         <!-- สร้างผ่าน JavaScript ด้านล่าง -->
       </div>
@@ -580,7 +580,7 @@
 
     <div class="guide-item">
       <div class="guide-item-title">7. ถ้วยรางวัลและระบบ 12 ระดับ</div>
-      <div class="guide-item-desc">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อไต่อันดับปลดล็อกโล่และถ้วยรางวัลตั้งแต่ระดับ 1 ถึง 12 ตามเงื่อนไขคะแนนที่กำหนด</div>
+      <div class="guide-item-desc">สะสมคะแนนจากการทำแบบฝึกหัดเพื่อไต่อันดับปลดล็อกเหรียญและถ้วยรางวัลตั้งแต่ระดับ 1 ถึง 12 ตามเงื่อนไขคะแนนที่กำหนด</div>
     </div>
 
     <div class="guide-item" style="margin-bottom: 0;">
@@ -1374,10 +1374,10 @@ document.getElementById('streakLogoutBtn').addEventListener('click', () => {
 // ===== Trophies & 12 Levels System Logic =====
 const TROPHIES_12_DATA = [
   { level: 0, name: 'ผู้เล่นใหม่', req: 0, icon: '🌱' },
-  { level: 1, name: 'โล่ชมเชย', req: 50, icon: '🎖️' },
-  { level: 2, name: 'โล่ทองแดง', req: 100, icon: '🥉' },
-  { level: 3, name: 'โล่เงิน', req: 150, icon: '🥈' },
-  { level: 4, name: 'โล่ทอง', req: 200, icon: '🥇' },
+  { level: 1, name: 'เหรียญชมเชย', req: 50, icon: '🎖️' },
+  { level: 2, name: 'เหรียญทองแดง', req: 100, icon: '🥉' },
+  { level: 3, name: 'เหรียญเงิน', req: 150, icon: '🥈' },
+  { level: 4, name: เหรียญทอง', req: 200, icon: '🥇' },
   { level: 5, name: 'ถ้วยทองแดง', req: 300, icon: '🏆🥉' },
   { level: 6, name: 'ถ้วยเงิน', req: 400, icon: '🏆🥈' },
   { level: 7, name: 'ถ้วยทอง', req: 500, icon: '🏆🥇' },
