@@ -414,7 +414,7 @@
     
     <div class="mode-selector">
       <button class="mode-btn active" id="modeStandardBtn">🎯 โหมดมาตรฐาน (5 ข้อ)</button>
-      <button class="mode-btn" id="modeUnlimitedBtn">♾️ ซ้อมไม่จำกัด (Unlimited)</button>
+      <button class="mode-btn" id="modeUnlimitedBtn">♾️ ซ้อมมือไม่จำกัด (Unlimited)</button>
     </div>
 
     <div id="fcStartScreen" style="text-align:center; padding: 10px 0;">
@@ -515,6 +515,7 @@
         <div id="trophyScoreDisplayBox" class="finder-input sigma-num" style="background:var(--bg-color); font-weight:bold; color:var(--text-color);">0 ข้อ</div>
         <p style="font-size:12.5px; color:var(--sub-text); margin-bottom:14px;">🔒 ป้องกันการโกง: ระบบดึงคะแนนสะสมจริงจากการทำแบบฝึกหัด</p>
 
+
       </div>
 
       <!-- การ์ดที่ 2: สถานะรางวัลปัจจุบัน -->
@@ -523,8 +524,8 @@
         <div style="display:flex; align-items:center; gap: 16px; margin-top: 10px;">
           <div id="currentBadgeIcon" style="font-size: 52px; background: var(--bg-color); padding: 12px; border-radius: 12px; border: 1.5px solid var(--border-color);">🛡️</div>
           <div>
-            <div id="currentBadgeTitle" class="sigma-serif" style="font-size: 18px; color: var(--accent-red);">โล่ชมเชย (ระดับ 1)</div>
-            <div id="currentBadgeNextGoal" style="font-size: 13.5px; color: var(--sub-text); margin-top: 4px;">ต้องการอีก 50 ข้อ เพื่อไปปลดล็อก โล่ทองแดง</div>
+            <div id="currentBadgeTitle" class="sigma-serif" style="font-size: 18px; color: var(--accent-red);">ผู้เล่นใหม่ (ระดับ 0)</div>
+            <div id="currentBadgeNextGoal" style="font-size: 13.5px; color: var(--sub-text); margin-top: 4px;">ต้องการอีก 50 ข้อ เพื่อไปปลดล็อก โล่ชมเชย</div>
           </div>
         </div>
       </div>
@@ -1372,10 +1373,11 @@ document.getElementById('streakLogoutBtn').addEventListener('click', () => {
 
 // ===== Trophies & 12 Levels System Logic =====
 const TROPHIES_12_DATA = [
-  { level: 1, name: 'เหรียญชมเชย', req: 50, icon: '🎖️' },
-  { level: 2, name: 'เหรียญทองแดง', req: 100, icon: '🥉' },
-  { level: 3, name: 'เหรียญเงิน', req: 150, icon: '🥈' },
-  { level: 4, name: 'เหรียญทอง', req: 200, icon: '🥇' },
+  { level: 0, name: 'ผู้เล่นใหม่', req: 0, icon: '🌱' },
+  { level: 1, name: 'โล่ชมเชย', req: 50, icon: '🎖️' },
+  { level: 2, name: 'โล่ทองแดง', req: 100, icon: '🥉' },
+  { level: 3, name: 'โล่เงิน', req: 150, icon: '🥈' },
+  { level: 4, name: 'โล่ทอง', req: 200, icon: '🥇' },
   { level: 5, name: 'ถ้วยทองแดง', req: 300, icon: '🏆🥉' },
   { level: 6, name: 'ถ้วยเงิน', req: 400, icon: '🏆🥈' },
   { level: 7, name: 'ถ้วยทอง', req: 500, icon: '🏆🥇' },
