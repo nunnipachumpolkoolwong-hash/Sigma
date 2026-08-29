@@ -1391,7 +1391,7 @@ function getTotalScore() {
     const data = JSON.parse(localStorage.getItem(`sigma_streak_${currentStreakUser}`)) || { totalDone: 0 };
     return data.totalDone || 0;
   }
-  return parseInt(localStorage.getItem('sigma_guest_score') || '50', 10);
+  return parseInt(localStorage.getItem('sigma_guest_score') || '0', 10);
 }
 
 function setTotalScore(val) {
