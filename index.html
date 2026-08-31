@@ -311,11 +311,18 @@
 <body>
 <div class="wrap">
 
+<div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+  <div style="background:var(--card-bg); border:2px solid var(--accent-red); border-radius:999px; padding:6px 18px; font-weight:bold; font-size:15px; color:var(--text-color); display:inline-flex; align-items:center; gap:6px;">
+    🪙 <span id="coinDisplayValue" class="sigma-num">0</span>
+  </div>
+</div>
+
 <div class="tabs">
   <button class="tab-btn active" data-tab="table">Sigma Table</button>
   <button class="tab-btn" data-tab="finder">Sigma Finder</button>
   <button class="tab-btn" data-tab="customTools">Custom Formula</button>
   <button class="tab-btn" data-tab="flashcard">ฝึกฝน/แบบฝึกหัด</button>
+  <button class="tab-btn" data-tab="sigmacoin">Sigma Coin</button>
   <button class="tab-btn" data-tab="mistakes">คลังข้อผิด</button>
   <button class="tab-btn" data-tab="streak">Streak</button>
   <button class="tab-btn" data-tab="trophies">ถ้วยรางวัล</button>
@@ -445,7 +452,13 @@
       </div>
 
       <div class="sigma-serif" style="font-size:28px; color:var(--text-color); margin-bottom:16px;" id="fcQuestion">Σ ...</div>
-      
+
+      <div style="display:flex; justify-content:center; gap:10px; margin-bottom:12px;">
+        <button id="fcHintBtn" class="a-btn" style="background:var(--highlight-bg);">💡 ใช้ Hint (เหลือ <span id="fcHintCharges">0</span>)</button>
+        <button id="fcSkipBtn" class="a-btn" style="color:var(--accent-red);">⏭️ ใช้ Skip (เหลือ <span id="fcSkipCharges">0</span>)</button>
+      </div>
+      <div id="fcHintText" style="display:none; background:var(--highlight-bg); border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:13.5px; color:var(--text-color); text-align:left;"></div>
+
       <div style="display:flex; justify-content:center; gap:10px; margin-bottom:16px;">
         <input type="number" id="fcAnswerInput" class="finder-input" placeholder="พิมพ์คำตอบที่หาได้" style="width:180px; text-align:center; margin:0;" />
         <button id="fcSubmitBtn" class="finder-btn" style="width:auto; padding:0 20px; margin:0;">ส่งคำตอบ</button>
@@ -465,6 +478,51 @@
       <p id="fcScoreText" style="font-size:16px; font-weight:bold; color:var(--text-color); margin-bottom:10px;"></p>
       <div id="fcAnalysisText" style="background:var(--bg-color); border-left:4px solid var(--accent-red); padding:12px; border-radius:6px; font-size:14px; line-height:1.6; color:var(--text-color);"></div>
       <button id="fcRestartBtn" class="finder-btn" style="margin-top:16px;">🔄 ลองทำใหม่อีกครั้ง</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tab: Sigma Coin & Shop -->
+<div id="tabSigmaCoin" class="tab-panel">
+  <div class="trophy-container">
+    <h1 class="sigma-serif">🪙 ระบบ Sigma Coin & ร้านค้า</h1>
+    <p class="subtitle">ใช้เหรียญที่สะสมได้จากการทำโจทย์ถูก เพื่อซื้อความช่วยเหลือพิเศษ หรือเดิมพันเพิ่มเหรียญกับ Double or Nothing</p>
+
+    <div style="text-align:center; margin-bottom:8px;">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:var(--highlight-bg); border:2px solid #E9C46A; border-radius:999px; padding:10px 24px; font-weight:bold; font-size:18px; color:var(--text-color);">
+        🪙 ยอดเหรียญปัจจุบัน: <span id="shopCoinDisplay" class="sigma-num">0</span> เหรียญ
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+      <div class="trophy-section-card" style="text-align:center;">
+        <div style="font-size:36px; margin-bottom:8px;">💡</div>
+        <div class="trophy-section-title" style="justify-content:center;">Hint (คำใบ้)</div>
+        <div style="font-weight:bold; color:#D4A017; font-size:16px; margin-bottom:6px;">ราคา 100 เหรียญ</div>
+        <div style="font-size:13px; color:var(--sub-text); margin-bottom:14px;">สิทธิ์คงเหลือ: <span id="shopHintCharges">0</span> ครั้ง</div>
+        <button id="buyHintBtn" class="finder-btn" style="margin-bottom:0;">ซื้อคำใบ้</button>
+      </div>
+      <div class="trophy-section-card" style="text-align:center;">
+        <div style="font-size:36px; margin-bottom:8px;">⏭️</div>
+        <div class="trophy-section-title" style="justify-content:center;">Skip (ข้ามข้อ)</div>
+        <div style="font-weight:bold; color:#D4A017; font-size:16px; margin-bottom:6px;">ราคา 250 เหรียญ</div>
+        <div style="font-size:13px; color:var(--sub-text); margin-bottom:14px;">สิทธิ์คงเหลือ: <span id="shopSkipCharges">0</span> ครั้ง</div>
+        <button id="buySkipBtn" class="finder-btn" style="margin-bottom:0;">ซื้อสิทธิ์ข้าม</button>
+      </div>
+    </div>
+
+    <div class="trophy-section-card">
+      <h3 class="trophy-section-title">🎯 โหมดเดิมพัน Double or Nothing</h3>
+      <p style="font-size:14px; color:var(--text-color); line-height:1.9; margin-bottom:14px;">
+        เดิมพันได้ตั้งแต่ 100–500 เหรียญ (ใช้ได้เฉพาะโจทย์ระดับกลาง–ยาก) ทำโจทย์ 5 ข้อ วัดผลตามความถูกต้อง:<br/>
+        ⚉ <b>ถูก 0–2 ข้อ:</b> เสียเหรียญที่เดิมพันทั้งหมด<br/>
+        ⚉ <b>ถูก 3 ข้อ:</b> ได้คืน 50% ของเดิมพัน<br/>
+        ⚉ <b>ถูก 4 ข้อ:</b> ได้คืนเท่ากับเดิมพัน (100%)<br/>
+        ⚉ <b>ถูก 5 ข้อ:</b> ได้ 2 เท่าของที่เดิมพัน!
+      </p>
+      <label class="finder-label">เลือกจำนวนเหรียญเดิมพัน (100–500):</label>
+      <input type="number" id="donBetInput" class="finder-input" min="100" max="500" step="10" value="100" style="max-width:280px;" />
+      <button id="startDonBtn" class="finder-btn" style="max-width:420px; margin-bottom:0;">🚀 เริ่มเดิมพัน Double or Nothing</button>
     </div>
   </div>
 </div>
@@ -728,6 +786,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     else if(tabName==='finder') document.getElementById('tabFinder').classList.add('active');
     else if(tabName==='customTools') document.getElementById('tabCustomTools').classList.add('active');
     else if(tabName==='flashcard') document.getElementById('tabFlashcard').classList.add('active');
+    else if(tabName==='sigmacoin') { document.getElementById('tabSigmaCoin').classList.add('active'); updateShopUI(); }
     else if(tabName==='mistakes') { document.getElementById('tabMistakes').classList.add('active'); renderMistakesList(); }
     else if(tabName==='streak') { document.getElementById('tabStreak').classList.add('active'); loadStreakData(); }
     else if(tabName==='trophies') { document.getElementById('tabTrophies').classList.add('active'); updateTrophiesUI(); }
@@ -761,7 +820,6 @@ applyTheme();
 // ===== Sigma Finder =====
 const FINDER_CARD_CAP = 40;       
 const MATCHES_PER_FORMULA_CAP = 5; 
-
 (function populateFinderFormulaSelect(){
   const sel = document.getElementById('finderFormula');
   sel.innerHTML = '<option value="all">ค้นหาทั้งหมด</option>';
@@ -1044,6 +1102,94 @@ function retryMistake(index) {
   renderFlashcard();
 }
 
+// ===== Sigma Coin System =====
+function getCoins() {
+  return parseInt(localStorage.getItem('sigma_coins') || '0', 10);
+}
+function setCoins(v) {
+  localStorage.setItem('sigma_coins', Math.max(0, v).toString());
+  updateAllCoinUI();
+}
+function addCoins(amount) {
+  setCoins(getCoins() + amount);
+}
+function getHintCharges() {
+  return parseInt(localStorage.getItem('sigma_hint_charges') || '0', 10);
+}
+function setHintCharges(v) {
+  localStorage.setItem('sigma_hint_charges', Math.max(0, v).toString());
+  updateAllCoinUI();
+}
+function getSkipCharges() {
+  return parseInt(localStorage.getItem('sigma_skip_charges') || '0', 10);
+}
+function setSkipCharges(v) {
+  localStorage.setItem('sigma_skip_charges', Math.max(0, v).toString());
+  updateAllCoinUI();
+}
+
+function updateAllCoinUI() {
+  const coinTop = document.getElementById('coinDisplayValue');
+  if (coinTop) coinTop.textContent = getCoins().toLocaleString();
+
+  const shopCoin = document.getElementById('shopCoinDisplay');
+  if (shopCoin) shopCoin.textContent = getCoins().toLocaleString();
+  const shopHint = document.getElementById('shopHintCharges');
+  if (shopHint) shopHint.textContent = getHintCharges();
+  const shopSkip = document.getElementById('shopSkipCharges');
+  if (shopSkip) shopSkip.textContent = getSkipCharges();
+
+  const fcHint = document.getElementById('fcHintCharges');
+  if (fcHint) fcHint.textContent = getHintCharges();
+  const fcSkip = document.getElementById('fcSkipCharges');
+  if (fcSkip) fcSkip.textContent = getSkipCharges();
+}
+function updateShopUI() { updateAllCoinUI(); }
+updateAllCoinUI();
+
+document.getElementById('buyHintBtn').addEventListener('click', () => {
+  if (getCoins() < 100) { alert('เหรียญไม่พอสำหรับซื้อคำใบ้ (ต้องการ 100 เหรียญ)'); return; }
+  addCoins(-100);
+  setHintCharges(getHintCharges() + 1);
+});
+
+document.getElementById('buySkipBtn').addEventListener('click', () => {
+  if (getCoins() < 250) { alert('เหรียญไม่พอสำหรับซื้อสิทธิ์ข้าม (ต้องการ 250 เหรียญ)'); return; }
+  addCoins(-250);
+  setSkipCharges(getSkipCharges() + 1);
+});
+
+document.getElementById('startDonBtn').addEventListener('click', () => {
+  const bet = parseInt(document.getElementById('donBetInput').value, 10);
+  if (!Number.isInteger(bet) || bet < 100 || bet > 500) {
+    alert('กรุณาเลือกจำนวนเหรียญเดิมพันระหว่าง 100–500 เหรียญ');
+    return;
+  }
+  if (bet > getCoins()) {
+    alert('เหรียญของคุณไม่พอสำหรับการเดิมพันนี้');
+    return;
+  }
+
+  isDonMode = true;
+  isUnlimitedMode = false;
+  donBetAmount = bet;
+  addCoins(-bet);
+  FC_TOTAL = 5;
+  if (currentLevel !== 'medium' && currentLevel !== 'hard') currentLevel = 'medium';
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="flashcard"]').classList.add('active');
+  document.getElementById('tabFlashcard').classList.add('active');
+
+  document.getElementById('fcStartScreen').style.display = 'none';
+  document.getElementById('flashcardBox').style.display = 'block';
+  document.getElementById('fcSummaryBox').style.display = 'none';
+
+  generateFlashcards();
+  renderFlashcard();
+});
+
 // ===== Flashcard & Training System =====
 let FC_TOTAL = 5;
 let fcCurrentIndex = 0;
@@ -1053,17 +1199,25 @@ let fcMistakes = [];
 let fcCurrentQ = null;
 let currentLevel = 'easy';
 let isUnlimitedMode = false;
+let isDonMode = false;
+let donBetAmount = 0;
+
+function setActiveModeBtn(id) {
+  ['modeStandardBtn', 'modeUnlimitedBtn'].forEach(bid => {
+    document.getElementById(bid).classList.toggle('active', bid === id);
+  });
+}
 
 document.getElementById('modeStandardBtn').addEventListener('click', () => {
   isUnlimitedMode = false;
-  document.getElementById('modeStandardBtn').classList.add('active');
-  document.getElementById('modeUnlimitedBtn').classList.remove('active');
+  isDonMode = false;
+  setActiveModeBtn('modeStandardBtn');
 });
 
 document.getElementById('modeUnlimitedBtn').addEventListener('click', () => {
   isUnlimitedMode = true;
-  document.getElementById('modeUnlimitedBtn').classList.add('active');
-  document.getElementById('modeStandardBtn').classList.remove('active');
+  isDonMode = false;
+  setActiveModeBtn('modeUnlimitedBtn');
 });
 
 const LEVEL_FORMULAS = {
@@ -1120,23 +1274,41 @@ function handleTimeOut() {
     document.getElementById('fcSubmitBtn').style.display = 'none';
     document.getElementById('fcStepBtn').style.display = 'block';
     document.getElementById('fcNextBtn').style.display = 'block';
+    document.getElementById('fcHintBtn').style.display = 'none';
+    document.getElementById('fcSkipBtn').style.display = 'none';
   }
 }
-
 document.querySelectorAll('.level-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    if (btn.disabled) return;
+    document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentLevel = btn.dataset.level;
   });
 });
 
 document.getElementById('fcStartBtn').addEventListener('click', () => {
+  if (isDonMode) {
+    const bet = parseInt(document.getElementById('donBetInput').value, 10);
+    if (!Number.isInteger(bet) || bet < 100 || bet > 500) {
+      alert('กรุณาเลือกจำนวนเหรียญเดิมพันระหว่าง 100–500 เหรียญ');
+      return;
+    }
+    if (bet > getCoins()) {
+      alert('เหรียญของคุณไม่พอสำหรับการเดิมพันนี้');
+      return;
+    }
+    donBetAmount = bet;
+    addCoins(-bet);
+    FC_TOTAL = 5;
+  } else {
+    FC_TOTAL = isUnlimitedMode ? 9999 : 5;
+  }
+
   document.getElementById('fcStartScreen').style.display = 'none';
   document.getElementById('flashcardBox').style.display = 'block';
   document.getElementById('fcSummaryBox').style.display = 'none';
-  
-  FC_TOTAL = isUnlimitedMode ? 9999 : 5;
+
   generateFlashcards();
   renderFlashcard();
 });
@@ -1213,9 +1385,30 @@ function renderFlashcard() {
   document.getElementById('fcFeedback').style.display = 'none';
   document.getElementById('fcStepBtn').style.display = 'none';
   document.getElementById('fcNextBtn').style.display = 'none';
+  document.getElementById('fcHintText').style.display = 'none';
+  document.getElementById('fcHintBtn').style.display = 'inline-block';
+  document.getElementById('fcSkipBtn').style.display = 'inline-block';
+  updateAllCoinUI();
 
   startTimer();
 }
+
+document.getElementById('fcHintBtn').addEventListener('click', () => {
+  if (getHintCharges() <= 0) { alert('คุณไม่มีสิทธิ์ Hint เหลือแล้ว ไปซื้อเพิ่มได้ที่แท็บ 🪙 Sigma Coin'); return; }
+  setHintCharges(getHintCharges() - 1);
+  const hintBox = document.getElementById('fcHintText');
+  const firstTermVal = fcCurrentQ.formula.fn(fcCurrentQ.k);
+  hintBox.textContent = `💡 คำใบ้: เริ่มจากพจน์แรกที่ i = ${fcCurrentQ.k} จะได้ f(${fcCurrentQ.k}) = ${firstTermVal.toLocaleString()} ลองบวกไปทีละพจน์จนถึง i = ${fcCurrentQ.n} นะคะ`;
+  hintBox.style.display = 'block';
+});
+
+document.getElementById('fcSkipBtn').addEventListener('click', () => {
+  if (getSkipCharges() <= 0) { alert('คุณไม่มีสิทธิ์ Skip เหลือแล้ว ไปซื้อเพิ่มได้ที่แท็บ 🪙 Sigma Coin'); return; }
+  setSkipCharges(getSkipCharges() - 1);
+  stopTimer();
+  fcCurrentIndex++;
+  renderFlashcard();
+});
 
 function checkAnswer() {
   stopTimer();
@@ -1231,6 +1424,7 @@ function checkAnswer() {
     fb.textContent = '🎉 เก่งมาก ตอบถูกต้อง!';
     fcScore++;
     earned = 1;
+    if (!isDonMode) addCoins(10);
   } else {
     fb.style.background = '#fde8e8';
     fb.style.color = '#C0392B';
@@ -1245,6 +1439,8 @@ function checkAnswer() {
   document.getElementById('fcSubmitBtn').style.display = 'none';
   document.getElementById('fcStepBtn').style.display = 'block';
   document.getElementById('fcNextBtn').style.display = 'block';
+  document.getElementById('fcHintBtn').style.display = 'none';
+  document.getElementById('fcSkipBtn').style.display = 'none';
 }
 
 document.getElementById('fcSubmitBtn').addEventListener('click', checkAnswer);
@@ -1275,7 +1471,32 @@ function showFcSummary() {
   document.getElementById('fcScoreText').textContent = `คุณทำได้ ${fcScore} / ${FC_TOTAL} คะแนน`;
 
   const analysis = document.getElementById('fcAnalysisText');
-  if (fcScore === FC_TOTAL) {
+
+  if (isDonMode) {
+    let payout = 0;
+    let resultMsg = '';
+    if (fcScore <= 2) {
+      payout = 0;
+      resultMsg = `เสียเหรียญที่เดิมพันทั้งหมด (${donBetAmount.toLocaleString()} 🪙)`;
+    } else if (fcScore === 3) {
+      payout = Math.floor(donBetAmount * 0.5);
+      resultMsg = `ได้คืน 50% ของเดิมพัน = ${payout.toLocaleString()} 🪙`;
+    } else if (fcScore === 4) {
+      payout = donBetAmount;
+      resultMsg = `ได้คืนเท่ากับเดิมพัน = ${payout.toLocaleString()} 🪙`;
+    } else {
+      payout = donBetAmount * 2;
+      resultMsg = `ยินดีด้วย! ได้ 2 เท่าของเดิมพัน = ${payout.toLocaleString()} 🪙`;
+    }
+
+    if (payout > 0) addCoins(payout);
+
+    analysis.innerHTML = `<b>🎲 ผล Double or Nothing (เดิมพัน ${donBetAmount.toLocaleString()} 🪙):</b><br/>${resultMsg}<br/><br/>💰 เหรียญคงเหลือปัจจุบัน: ${getCoins().toLocaleString()} 🪙`;
+
+    isDonMode = false;
+    donBetAmount = 0;
+    setActiveModeBtn('modeStandardBtn');
+  } else if (fcScore === FC_TOTAL) {
     analysis.innerHTML = '<b>วิเคราะห์ผล:</b> เก่งมาก ฝึกฝนต่อไปค่ะ คุณมีความเข้าใจเกี่ยวกับสูตรและการคำนวณ Sigma เป็นอย่างดี!';
   } else {
     const uniqueMistakes = [...new Set(fcMistakes)].join(', ');
